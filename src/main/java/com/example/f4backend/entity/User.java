@@ -29,8 +29,8 @@ public class User {
     private String profilePicture;
     private LocalDate dob;
     private LocalDate createdDate;
-    private boolean isLocked;
-
+    private boolean isLocked = false;
+    private String userNumber;
     @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.MERGE })
     @JoinTable(
             name = "user_roles",

@@ -3,18 +3,17 @@ package com.example.f4backend.controller;
 import com.example.f4backend.dto.reponse.ApiResponse;
 import com.example.f4backend.dto.reponse.AuthResponse;
 import com.example.f4backend.dto.reponse.IntrospectResponse;
+import com.example.f4backend.dto.reponse.UserResponse;
 import com.example.f4backend.dto.request.AuthRequest;
 import com.example.f4backend.dto.request.IntrospectRequest;
+import com.example.f4backend.entity.User;
 import com.example.f4backend.enums.ErrorCode;
 import com.example.f4backend.service.AuthService;
 import com.nimbusds.jose.JOSEException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 
@@ -23,6 +22,7 @@ import java.text.ParseException;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AuthController {
+
     final AuthService authenticationService;
 
     @PostMapping("/login")
@@ -40,6 +40,7 @@ public class AuthController {
         apiResponse.setCode(ErrorCode.LOGIN_SUSSCESS.getCode());
         return apiResponse;
     }
+
 
 
 }
