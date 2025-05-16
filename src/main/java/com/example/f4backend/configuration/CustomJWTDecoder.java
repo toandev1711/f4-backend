@@ -18,7 +18,7 @@ import java.text.ParseException;
 import java.util.Objects;
 
 @Component
-public class CustomJWTDecoder implements JwtDecoder {
+public class    CustomJWTDecoder implements JwtDecoder {
     @Autowired
     private Dotenv dotenv;
     private String SIGNER_KEY;

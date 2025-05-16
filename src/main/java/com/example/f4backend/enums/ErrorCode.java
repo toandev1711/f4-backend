@@ -17,7 +17,8 @@ public enum ErrorCode {
     UNAUTHENTICATED(1006, "Unauthenticated", HttpStatus.UNAUTHORIZED),
     CREATE_USER_SUCCESS(1000, "User has been created", HttpStatus.OK),
     USER_EXISTED(1001, "User existed", HttpStatus.FOUND),
-
+    EMAIL_ALREADY_EXISTS(1001, "User existed", HttpStatus.FOUND),
+    PHONE_ALREADY_EXISTS(1001, "User existed", HttpStatus.FOUND)
     ;
     ErrorCode(int code, String message, HttpStatus httpStatus){
         this.code = code;
