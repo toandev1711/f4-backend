@@ -10,8 +10,8 @@ import java.sql.Date;
 @Table(name = "vehicle_details")
 public class VehicleDetail {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer vehicleId;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String vehicleId;
 
     @ManyToOne
     @JoinColumn(name = "driver_id", nullable = false)

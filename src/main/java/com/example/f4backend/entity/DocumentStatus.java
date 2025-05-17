@@ -10,8 +10,8 @@ import java.sql.Timestamp;
 @Table(name = "document_status")
 public class DocumentStatus {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String statusID;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer statusID;
 
     @Column(nullable = false)
     private String statusName;

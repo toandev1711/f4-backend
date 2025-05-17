@@ -2,13 +2,19 @@ package com.example.f4backend.entity;
 import com.example.f4backend.enums.DriverStatus;
 import com.example.f4backend.enums.DriverType;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Entity
 @Data
 @Table(name = "drivers")
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Driver {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
