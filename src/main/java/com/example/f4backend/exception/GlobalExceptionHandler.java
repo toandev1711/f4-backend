@@ -19,14 +19,36 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(errorCode.getHttpStatus()).body(apiResponse);
     }
 
-    @ExceptionHandler(value = CustomException.class)
-    ResponseEntity<ApiResponse> handlingCustomRuntimeException(CustomException exception){
+    @ExceptionHandler(value = DriverException.class)
+    ResponseEntity<ApiResponse<Object>> handleDriverException(DriverException exception) {
         ErrorCode errorCode = exception.getErrorCode();
-        ApiResponse apiResponse  = new ApiResponse();
-        apiResponse.setCode(errorCode.getCode());
-        apiResponse.setMessage(exception.getMessage());
+        ApiResponse<Object> apiResponse = ApiResponse.<Object>builder()
+                .code(errorCode.getCode())
+                .message(errorCode.getMessage())
+                .result(null)
+                .build();
         return ResponseEntity.status(errorCode.getHttpStatus()).body(apiResponse);
     }
+
+    @ExceptionHandler(value = CustomException.class)
+    ResponseEntity<ApiResponse<Object>> handleCustomException(CustomException exception) {
+        ErrorCode errorCode = exception.getErrorCode();
+        ApiResponse<Object> apiResponse = ApiResponse.<Object>builder()
+                .code(errorCode.getCode())
+                .message(errorCode.getMessage())
+                .result(null)
+                .build();
+        return ResponseEntity.status(errorCode.getHttpStatus()).body(apiResponse);
+    }
+
+//    @ExceptionHandler(value = CustomException.class)
+//    ResponseEntity<ApiResponse> handlingCustomRuntimeException(CustomException exception){
+//        ErrorCode errorCode = exception.getErrorCode();
+//        ApiResponse apiResponse  = new ApiResponse();
+//        apiResponse.setCode(errorCode.getCode());
+//        apiResponse.setMessage(exception.getMessage());
+//        return ResponseEntity.status(errorCode.getHttpStatus()).body(apiResponse);
+//    }
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     ResponseEntity<ApiResponse> handlingValidation(MethodArgumentNotValidException exception){
         String enumKey = exception.getFieldError().getDefaultMessage();

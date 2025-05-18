@@ -26,12 +26,11 @@ public class UserService {
         if (userRepository.existsByUsername(request.getUsername()))
             throw new CustomException(ErrorCode.USER_EXISTED);
         if (userRepository.existsByEmail(request.getEmail())) {
-            throw new IllegalArgumentException(ErrorCode.EMAIL_ALREADY_EXISTS.getMessage());
+            throw new CustomException(ErrorCode.EMAIL_ALREADY_EXISTS);
         }
-        //TODO : validate PhoneNumber
-//        if (userRepository.existsByEmail(request.getEmail())) {
-//            throw new IllegalArgumentException(ErrorCode.EMAIL_ALREADY_EXISTS.getMessage());
-//        }
+        if (userRepository.existsByPhone(request.getPhone())) {
+            throw new CustomException(ErrorCode.PHONE_ALREADY_EXISTS);
+        }
         User user = userMapper.toUser(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         return userMapper.toUserResponse(userRepository.save(user));

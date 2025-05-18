@@ -1,40 +1,76 @@
-//package com.example.f4backend.controller;
-//
-//
-//import com.example.f4backend.dto.reponse.ApiResponse;
-//import com.example.f4backend.dto.request.DriverRegistrationRequest;
-//import com.example.f4backend.entity.Driver;
-//import com.example.f4backend.enums.ErrorCode;
-////import com.example.f4backend.service.DriverService;
-//import lombok.RequiredArgsConstructor;
+package com.example.f4backend.controller;
+
+
+
+import com.example.f4backend.dto.reponse.*;
+//import com.example.f4backend.dto.reponse.UserResponse;
+import com.example.f4backend.dto.request.*;
+//import com.example.f4backend.entity.*;
+import com.example.f4backend.enums.ErrorCode;
+//import com.example.f4backend.service.DriverService;
+import com.example.f4backend.repository.IdentifierCardRepository;
+import com.example.f4backend.service.DriverService;
+//import com.example.f4backend.service.UserService;
+import jakarta.validation.Valid;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 //import org.springframework.http.ResponseEntity;
 //import org.springframework.security.access.prepost.PreAuthorize;
-//import org.springframework.web.bind.annotation.PostMapping;
-//import org.springframework.web.bind.annotation.RequestBody;
-//import org.springframework.web.bind.annotation.RequestMapping;
-//import org.springframework.web.bind.annotation.RestController;
-//
-//@RestController
-//@RequestMapping("/api/drivers")
-//@RequiredArgsConstructor
-//public class DriverController {
-//    private final DriverService driverService;
-//
-//    @PostMapping("/register")
-//    @PreAuthorize("hasRole('ADMIN')")
-//    public ResponseEntity<ApiResponse> registerDriver(@RequestBody DriverRegistrationRequest request) {
-//        try {
-//            Driver driver = driverService.createDriver(request);
-//            ApiResponse response = new ApiResponse();
-//            response.setCode(ErrorCode.CREATE_USER_SUCCESS.getCode());
-//            response.setResult(driver.getDriverId());
-//            response.setMessage(ErrorCode.CREATE_USER_SUCCESS.getMessage());
-//            return ResponseEntity.ok(response);
-//        } catch (Exception e) {
-//            ApiResponse response = new ApiResponse();
-//            response.setCode(ErrorCode.UNCATEDGORIZED_EXCEPTION.getCode());
-//            response.setMessage(e.getMessage());
-//            return ResponseEntity.status(ErrorCode.UNCATEDGORIZED_EXCEPTION.getHttpStatus()).body(response);
-//        }
-//    }
-//}
+import org.springframework.web.bind.annotation.*;
+
+@Slf4j
+@RestController
+@RequestMapping("/drivers")
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+public class DriverController {
+    private final DriverService driverService;
+
+    @PostMapping("")
+    public ApiResponse<DriverResponse> createDriver(@Valid @RequestBody DriverRequest request) {
+        return ApiResponse.<DriverResponse>
+                        builder()
+                .code(ErrorCode.CREATE_DRIVER_SUCCESS.getCode())
+                .result(driverService.createDriver(request))
+                .message(ErrorCode.CREATE_DRIVER_SUCCESS.getMessage())
+                .build();
+    }
+
+    @PostMapping("/{driverId}/identifier-card")
+    public ApiResponse<IdentifierCardResponse> createIdentifierCard(
+            @PathVariable String driverId,
+            @Valid @RequestBody IdentifierCardRequest request) {
+        return ApiResponse.<IdentifierCardResponse>builder()
+                .code(ErrorCode.CREATE_IDENTIFIERCARD_SUCCESS.getCode())
+                .result(driverService.createIdentifierCard(driverId , request))
+                .message(ErrorCode.CREATE_IDENTIFIERCARD_SUCCESS.getMessage())
+                .build();
+    }
+
+
+    @PostMapping("/{driverId}/license-card")
+    public ApiResponse<LicenseCarResponse> createLicenseCar(
+            @PathVariable String driverId,
+            @Valid @RequestBody LicenseCarRequest request) {
+        return ApiResponse.<LicenseCarResponse>builder()
+                .code(ErrorCode.CREATE_LICENSECARD_SUCCESS.getCode())
+                .result(driverService.createLicenseCar(driverId ,request))
+                .message(ErrorCode.CREATE_LICENSECARD_SUCCESS.getMessage())
+                .build();
+    }
+
+    @PostMapping("/{driverId}/vehicle-detail")
+    public ApiResponse<VehicleDetailResponse> createVehicleDetail(
+            @PathVariable String driverId,
+            @Valid @RequestBody VehicleDetailRequest request){
+        return ApiResponse.<VehicleDetailResponse>builder()
+                .code(ErrorCode.CREATE_VEHICLEDETAIL_SUCCESS.getCode())
+                .result(driverService.createVehicleDetail(driverId , request))
+                .message(ErrorCode.CREATE_VEHICLEDETAIL_SUCCESS.getMessage())
+                .build();
+    }
+
+
+}
