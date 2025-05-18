@@ -15,7 +15,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -127,39 +126,38 @@ public class DriverService {
 
                 identifierCardRepository.save(card);
         }
-        // public void updateLicenseCar(String driverId, LicenseCarRequest request) {
-        // Driver driver = driverRepository.findById(driverId)
-        // .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_EXISTED));
-        //
-        // DocumentStatus documentStatus = documentStatusRepository.findById(1)
-        // .orElseThrow(() -> new CustomException(ErrorCode.STATUS_NOT_FOUND));
-        //
-        // LicenseCar license = licenseCarRepository.findByDriverDriverId(driverId)
-        // .orElse(new LicenseCar());
-        //
-        // license.setDriver(driver);
-        // license.setStatus(documentStatus);
-        // licenseCarMapper.updateLicenseCarFromDto(request, license);
-        //
-        // licenseCarRepository.save(license);
-        // }
+        public void updateLicenseCar(String licenseCarId, String driverId, LicenseCarRequest request) {
+                Driver driver = driverRepository.findById(driverId)
+                        .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_EXISTED));
 
-        // public VehicleDetail updateVehicleDetail(String driverId,
-        // VehicleDetailRequest request) {
-        // Driver driver = driverRepository.findById(driverId)
-        // .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_EXISTED));
-        //
-        // DocumentStatus documentStatus = documentStatusRepository.findById(1)
-        // .orElseThrow(() -> new CustomException(ErrorCode.STATUS_NOT_FOUND));
-        //
-        // VehicleDetail vehicle =
-        // vehicleDetailRepository.findByDriverDriverId(driverId)
-        // .orElse(new VehicleDetail());
-        //
-        // vehicle.setDriver(driver);
-        // vehicle.setStatus(documentStatus);
-        // vehicleDetailMapper.updateVehicleDetailFromDto(request, vehicle);
-        //
-        // return vehicleDetailRepository.save(vehicle);
-        // }
+                DocumentStatus documentStatus = documentStatusRepository.findById(1)
+                        .orElseThrow(() -> new CustomException(ErrorCode.STATUS_NOT_FOUND));
+
+                LicenseCar license = licenseCarRepository.findByLicenseCarIdAndDriverDriverId(licenseCarId, driverId)
+                        .orElseThrow(() -> new CustomException(ErrorCode.DOCUMENT_NOT_FOUND));
+
+                license.setDriver(driver);
+                license.setStatus(documentStatus);
+                licenseCarMapper.updateLicenseCarFromDto(request, license);
+
+                licenseCarRepository.save(license);
+        }
+
+
+        public VehicleDetail updateVehicleDetail(String vehicleId, String driverId, VehicleDetailRequest request) {
+                Driver driver = driverRepository.findById(driverId)
+                        .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_EXISTED));
+
+                DocumentStatus documentStatus = documentStatusRepository.findById(1)
+                        .orElseThrow(() -> new CustomException(ErrorCode.STATUS_NOT_FOUND));
+
+                VehicleDetail vehicle = vehicleDetailRepository.findByVehicleIdAndDriverDriverId(vehicleId, driverId)
+                        .orElseThrow(() -> new CustomException(ErrorCode.DOCUMENT_NOT_FOUND));
+
+                vehicle.setDriver(driver);
+                vehicle.setStatus(documentStatus);
+                vehicleDetailMapper.updateVehicleDetailFromDto(request, vehicle);
+
+                return vehicleDetailRepository.save(vehicle);
+        }
 }

@@ -87,20 +87,26 @@ public class DriverController {
         return ResponseEntity.ok(ErrorCode.UPDATE_DRIVER_SUCCESS);
     }
 
-    // @PutMapping("/update-license-car/{driverId}")
-    // public ResponseEntity<ErrorCode> updateLicenseCar(
-    // @PathVariable String driverId,
-    // @RequestBody LicenseCarRequest request) {
-    // driverService.updateLicenseCar(driverId, request);
-    // return ResponseEntity.ok(ErrorCode.UPDATE_DRIVER_SUCCESS);
-    // }
+    @PutMapping("/update-license-car/{driverId}/{licenseCarId}")
+    public ResponseEntity<ErrorCode> updateLicenseCar(
+            @PathVariable String driverId,
+            @PathVariable String licenseCarId,
+            @RequestBody LicenseCarRequest request) {
 
-    // @PutMapping("/update-vehicle/{driverId}")
-    // public ResponseEntity<ErrorCode> updateVehicleDetail(
-    // @PathVariable String driverId,
-    // @RequestBody VehicleDetailRequest request) {
-    // driverService.updateVehicleDetail(driverId, request);
-    // return ResponseEntity.ok(ErrorCode.UPDATE_DRIVER_SUCCESS);
-    // }
+        driverService.updateLicenseCar(licenseCarId, driverId, request);
+        return ResponseEntity.ok(ErrorCode.UPDATE_DRIVER_SUCCESS);
+    }
+
+
+    @PutMapping("/update-vehicle/{driverId}/{vehicleId}")
+    public ResponseEntity<ErrorCode> updateVehicleDetail(
+            @PathVariable String driverId,
+            @PathVariable String vehicleId,
+            @RequestBody VehicleDetailRequest request) {
+
+        driverService.updateVehicleDetail(vehicleId, driverId, request);
+        return ResponseEntity.ok(ErrorCode.UPDATE_DRIVER_SUCCESS);
+    }
+
 
 }

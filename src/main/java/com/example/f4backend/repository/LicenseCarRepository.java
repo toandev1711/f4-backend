@@ -14,4 +14,6 @@ public interface LicenseCarRepository extends JpaRepository<LicenseCar, Integer>
 
     // needtofix
     Optional<LicenseCar> findByLicenseNumber(String licenseNumber);
+    Optional<LicenseCar> findByLicenseCarIdAndDriverDriverId(String licenseCarId, String driverId);
+
 }
