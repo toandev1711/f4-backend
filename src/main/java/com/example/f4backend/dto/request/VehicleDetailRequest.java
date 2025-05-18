@@ -3,6 +3,7 @@ package com.example.f4backend.dto.request;
 import lombok.Data;
 
 import java.sql.Date;
+
 @Data
 public class VehicleDetailRequest {
     private String licensePlateNumber;
@@ -13,4 +14,5 @@ public class VehicleDetailRequest {
     private String backPhoto;
     private Date issueDate;
     private String statusId;
+    private Date CreateAt;
 }

@@ -1,4 +1,6 @@
-//package com.example.f4backend.mapper;
+
+package com.example.f4backend.mapper;
+
 //
 //import com.example.f4backend.dto.request.DriverRegistrationRequest;
 //import com.example.f4backend.dto.request.IdentifierCardRequest;
@@ -50,3 +52,36 @@
 //        target.setUser(user);
 //    }
 //}
+import com.example.f4backend.dto.request.*;
+
+import com.example.f4backend.entity.*;
+import org.mapstruct.Mapper;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
+
+@Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+public interface DriverMapper {
+    @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    public interface DriverInfoMapper {
+        void updateUserFromDto(DriverInfoRequest dto, @MappingTarget User entity);
+    }
+
+    @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    public interface IdentifierCardMapper {
+        void updateIdentifierCardFromDto(IdentifierCardRequest dto, @MappingTarget IdentifierCard entity);
+    }
+
+    @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    public interface LicenseCarMapper {
+        void updateLicenseCarFromDto(LicenseCarRequest dto, @MappingTarget LicenseCar entity);
+    }
+
+    @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    public interface VehicleDetailMapper {
+        void updateVehicleDetailFromDto(VehicleDetailRequest dto, @MappingTarget VehicleDetail entity);
+    }
+    @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    public interface UserMapper {
+        DriverInfoRequest toUserDto(User user);
+    }
+}
