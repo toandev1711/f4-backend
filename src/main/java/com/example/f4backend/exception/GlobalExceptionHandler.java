@@ -19,16 +19,16 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(errorCode.getHttpStatus()).body(apiResponse);
     }
 
-    @ExceptionHandler(value = DriverException.class)
-    ResponseEntity<ApiResponse<Object>> handleDriverException(DriverException exception) {
-        ErrorCode errorCode = exception.getErrorCode();
-        ApiResponse<Object> apiResponse = ApiResponse.<Object>builder()
-                .code(errorCode.getCode())
-                .message(errorCode.getMessage())
-                .result(null)
-                .build();
-        return ResponseEntity.status(errorCode.getHttpStatus()).body(apiResponse);
-    }
+//    @ExceptionHandler(value = DriverException.class)
+//    ResponseEntity<ApiResponse<Object>> handleDriverException(DriverException exception) {
+//        ErrorCode errorCode = exception.getErrorCode();
+//        ApiResponse<Object> apiResponse = ApiResponse.<Object>builder()
+//                .code(errorCode.getCode())
+//                .message(errorCode.getMessage())
+//                .result(null)
+//                .build();
+//        return ResponseEntity.status(errorCode.getHttpStatus()).body(apiResponse);
+//    }
 
     @ExceptionHandler(value = CustomException.class)
     ResponseEntity<ApiResponse<Object>> handleCustomException(CustomException exception) {

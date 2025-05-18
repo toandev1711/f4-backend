@@ -24,7 +24,10 @@ public enum ErrorCode {
     EMAIL_ALREADY_EXISTS(1001, "Email existed", HttpStatus.FOUND),
     PHONE_ALREADY_EXISTS(1001, "PhoneNumber existed", HttpStatus.FOUND),
     LICENSEPLATENUMBER_ALREADY_EXISTS(1001, "VehicleDetail - License Plate Number existed", HttpStatus.FOUND),
-    LICENSENUMBER_ALREADY_EXISTS(1001, "LicenseCard - License Number existed", HttpStatus.FOUND)
+    LICENSENUMBER_ALREADY_EXISTS(1001, "LicenseCard - License Number existed", HttpStatus.FOUND),
+    DOCUMENT_NOT_FOUND(1001, "No Document", HttpStatus.FOUND),
+    STATUS_NOT_FOUND(1001, "No Status Document", HttpStatus.FOUND),
+    UPDATE_DRIVER_SUCCESS(200, "Update driver successful", HttpStatus.OK),
     ;
     ErrorCode(int code, String message, HttpStatus httpStatus){
         this.code = code;

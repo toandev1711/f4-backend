@@ -15,4 +15,5 @@ public class VehicleDetailRequest {
     private String backPhoto;
     private Date issueDate;
     private String statusId;
+    private Date CreateAt;
 }

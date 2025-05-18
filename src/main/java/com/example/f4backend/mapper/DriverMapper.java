@@ -72,4 +72,29 @@ public interface DriverMapper {
     default DriverStatus mapDriverStatus(String status) {
         return DriverStatus.valueOf(status.toUpperCase());
     }
+
+    //driver update
+    @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    public interface DriverInfoMapper {
+        void updateUserFromDto(DriverInfoRequest dto, @MappingTarget User entity);
+    }
+
+    @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    public interface IdentifierCardMapper {
+        void updateIdentifierCardFromDto(IdentifierCardRequest dto, @MappingTarget IdentifierCard entity);
+    }
+
+    @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    public interface LicenseCarMapper {
+        void updateLicenseCarFromDto(LicenseCarRequest dto, @MappingTarget LicenseCar entity);
+    }
+
+    @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    public interface VehicleDetailMapper {
+        void updateVehicleDetailFromDto(VehicleDetailRequest dto, @MappingTarget VehicleDetail entity);
+    }
+    @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    public interface UserMapper {
+        DriverInfoRequest toUserDto(User user);
+    }
 }
