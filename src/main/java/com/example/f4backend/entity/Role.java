@@ -1,8 +1,6 @@
 package com.example.f4backend.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -19,8 +17,10 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Role {
     @Id
-    String name;
-    String description;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
+    private String name;
+    private String description;
 
     @ManyToMany(mappedBy = "roles")
     private Set<User> users = new HashSet<>();

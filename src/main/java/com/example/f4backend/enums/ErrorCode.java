@@ -14,14 +14,21 @@ public enum ErrorCode {
     LOGIN_FAULT(1006, "Cannot login", HttpStatus.BAD_REQUEST),
     LOGIN_SUSSCESS(200, "Login susscessfully", HttpStatus.OK),
     GET_SUSSCESS(200, "Get susscessed", HttpStatus.OK),
-    UPDATE_DRIVER_SUCCESS(200, "Update susscessed", HttpStatus.OK),
     UNAUTHENTICATED(1006, "Unauthenticated", HttpStatus.UNAUTHORIZED),
     CREATE_USER_SUCCESS(1000, "User has been created", HttpStatus.OK),
+    CREATE_DRIVER_SUCCESS(1000, "Driver has been created", HttpStatus.OK),
+    CREATE_IDENTIFIERCARD_SUCCESS(1000, "IndentifierCard has been created", HttpStatus.OK),
+    CREATE_LICENSECARD_SUCCESS(1000, "Licensecard has been created", HttpStatus.OK),
+    CREATE_VEHICLEDETAIL_SUCCESS(1000, "VehicleDetail has been created", HttpStatus.OK),
     USER_EXISTED(1001, "User existed", HttpStatus.FOUND),
-    EMAIL_ALREADY_EXISTS(1001, "User existed", HttpStatus.FOUND),
-    PHONE_ALREADY_EXISTS(1001, "User existed", HttpStatus.FOUND),
+    EMAIL_ALREADY_EXISTS(1001, "Email existed", HttpStatus.FOUND),
+    PHONE_ALREADY_EXISTS(1001, "PhoneNumber existed", HttpStatus.FOUND),
+    LICENSEPLATENUMBER_ALREADY_EXISTS(1001, "VehicleDetail - License Plate Number existed", HttpStatus.FOUND),
+    LICENSENUMBER_ALREADY_EXISTS(1001, "LicenseCard - License Number existed", HttpStatus.FOUND),
     DOCUMENT_NOT_FOUND(1001, "No Document", HttpStatus.FOUND),
-    STATUS_NOT_FOUND(1001, "No Status Document", HttpStatus.FOUND);
+    STATUS_NOT_FOUND(1001, "No Status Document", HttpStatus.FOUND),
+    UPDATE_DRIVER_SUCCESS(200, "Update driver successful", HttpStatus.OK),
+    ;
 
     ErrorCode(int code, String message, HttpStatus httpStatus) {
         this.code = code;
