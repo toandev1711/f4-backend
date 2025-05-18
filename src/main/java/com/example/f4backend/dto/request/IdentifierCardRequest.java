@@ -13,4 +13,5 @@ public class IdentifierCardRequest {
     private String frontPhoto;
     private String backPhoto;
     private int statusId;
+    private Date CreateAt;
 }

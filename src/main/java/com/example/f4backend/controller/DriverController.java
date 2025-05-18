@@ -18,11 +18,12 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 //import org.springframework.http.ResponseEntity;
 //import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
-@RequestMapping("/drivers")
+@RequestMapping("/driver")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class DriverController {
@@ -72,5 +73,38 @@ public class DriverController {
                 .build();
     }
 
+//    updateDriver
+
+    @PutMapping("/update-info/{userId}")
+    public ResponseEntity<ErrorCode> updateUserInfo(
+            @PathVariable String userId,
+            @RequestBody DriverInfoRequest request) {
+        driverService.updateDriverInfo(userId, request);
+        return ResponseEntity.ok(ErrorCode.UPDATE_DRIVER_SUCCESS);
+    }
+
+    @PutMapping("/update-cccd/{driverId}")
+    public ResponseEntity<ErrorCode> updateIdentifierCard(
+            @PathVariable String driverId,
+            @RequestBody IdentifierCardRequest request) {
+        driverService.updateIdentifierCard(driverId, request);
+        return ResponseEntity.ok(ErrorCode.UPDATE_DRIVER_SUCCESS);
+    }
+
+//    @PutMapping("/update-license-car/{driverId}")
+//    public ResponseEntity<ErrorCode> updateLicenseCar(
+//            @PathVariable String driverId,
+//            @RequestBody LicenseCarRequest request) {
+//        driverService.updateLicenseCar(driverId, request);
+//        return ResponseEntity.ok(ErrorCode.UPDATE_DRIVER_SUCCESS);
+//    }
+
+//    @PutMapping("/update-vehicle/{driverId}")
+//    public ResponseEntity<ErrorCode> updateVehicleDetail(
+//            @PathVariable String driverId,
+//            @RequestBody VehicleDetailRequest request) {
+//        driverService.updateVehicleDetail(driverId, request);
+//        return ResponseEntity.ok(ErrorCode.UPDATE_DRIVER_SUCCESS);
+//    }
 
 }
