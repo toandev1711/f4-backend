@@ -82,9 +82,8 @@ public class AuthService {
             throw new CustomException(ErrorCode.UNAUTHENTICATED);
         return signedJWT;
     }
+
     public AuthResponse authenticate(AuthRequest request){
-//        var user = userRepository.findByUsername(request.getUsername())
-//                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_EXISTED));
         var user = userRepository.findByPhone(request.getPhone())
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_EXISTED));
 
@@ -130,6 +129,7 @@ public class AuthService {
                 stringJoiner.add("ROLE_" + role.getName());
             });
         }
+        stringJoiner.add(user.getId());
         return stringJoiner.toString();
     }
 }

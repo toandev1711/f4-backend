@@ -3,6 +3,7 @@ package com.example.f4backend.controller;
 import com.example.f4backend.dto.reponse.ApiResponse;
 import com.example.f4backend.dto.reponse.UserResponse;
 import com.example.f4backend.dto.request.UserCreationRequest;
+import com.example.f4backend.dto.request.UserUpdateRequest;
 import com.example.f4backend.entity.User;
 import com.example.f4backend.enums.ErrorCode;
 import com.example.f4backend.service.UserService;
@@ -29,6 +30,20 @@ public class UserController {
                 .code(ErrorCode.CREATE_USER_SUCCESS.getCode())
                 .result(userService.createUser(request))
                 .message(ErrorCode.CREATE_USER_SUCCESS.getMessage())
+                .build();
+    }
+
+    @PutMapping("/{userId}")
+    public String update (@PathVariable String userId, @RequestBody UserUpdateRequest request ){
+        log.info(userService.updateUser(userId, request).toString());
+        return "ok";
+    }
+
+    @GetMapping("/info")
+    public ApiResponse<UserResponse> myInfo(){
+        return ApiResponse.<UserResponse>builder()
+                .result(userService.myInfo())
+                .message("Your information")
                 .build();
     }
 }
