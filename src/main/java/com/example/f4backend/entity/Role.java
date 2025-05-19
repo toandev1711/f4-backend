@@ -16,8 +16,6 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Role {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
     private String name;
     private String description;
 
