@@ -9,7 +9,11 @@ import java.util.Optional;
 
 public interface LicenseCarRepository extends JpaRepository<LicenseCar, Integer> {
     List<LicenseCar> findByDriverDriverId(String driverId);
+
     boolean existsByLicenseNumber(@NotNull String licenseNumber);
-    //needtofix
+
+    // needtofix
     Optional<LicenseCar> findByLicenseNumber(String licenseNumber);
+    Optional<LicenseCar> findByLicenseCarIdAndDriverDriverId(String licenseCarId, String driverId);
+
 }

@@ -16,10 +16,12 @@ import java.util.Collections;
 public interface DriverMapper {
 
     // Request to Entity
-//    @Mapping(target = "id", ignore = true)
-//    @Mapping(target = "createdDate", expression = "java(java.time.LocalDate.now())")
-//    @Mapping(target = "roles", expression = "java(java.util.Collections.singleton(com.example.f4backend.enums.Role.DRIVER))")
-//    User toUser(UserCreationRequest request);
+    // @Mapping(target = "id", ignore = true)
+    // @Mapping(target = "createdDate", expression =
+    // "java(java.time.LocalDate.now())")
+    // @Mapping(target = "roles", expression =
+    // "java(java.util.Collections.singleton(com.example.f4backend.enums.Role.DRIVER))")
+    // User toUser(UserCreationRequest request);
 
     @Mapping(target = "driverId", ignore = true)
     @Mapping(target = "driverType", qualifiedByName = "mapDriverType")
@@ -45,7 +47,7 @@ public interface DriverMapper {
     LicenseCar toLicenseCar(LicenseCarRequest request, Driver driver, DocumentStatus status);
 
     // Entity to Response
-//    UserResponse toUserResponse(User user);
+    // UserResponse toUserResponse(User user);
 
     @Mapping(target = "userId", source = "user.id")
     DriverResponse toDriverResponse(Driver driver);
@@ -73,7 +75,7 @@ public interface DriverMapper {
         return DriverStatus.valueOf(status.toUpperCase());
     }
 
-    //driver update
+    // driver update
     @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     public interface DriverInfoMapper {
         void updateUserFromDto(DriverInfoRequest dto, @MappingTarget User entity);
@@ -93,6 +95,7 @@ public interface DriverMapper {
     public interface VehicleDetailMapper {
         void updateVehicleDetailFromDto(VehicleDetailRequest dto, @MappingTarget VehicleDetail entity);
     }
+
     @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     public interface UserMapper {
         DriverInfoRequest toUserDto(User user);
