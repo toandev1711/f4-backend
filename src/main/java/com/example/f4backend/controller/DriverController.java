@@ -16,8 +16,14 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 //import org.springframework.http.ResponseEntity;
 //import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -71,42 +77,52 @@ public class DriverController {
 
     // updateDriver
 
-    @PutMapping("/update-info/{userId}")
-    public ResponseEntity<ErrorCode> updateUserInfo(
-            @PathVariable String userId,
-            @RequestBody DriverInfoRequest request) {
-        driverService.updateDriverInfo(userId, request);
-        return ResponseEntity.ok(ErrorCode.UPDATE_DRIVER_SUCCESS);
-    }
-
     @PutMapping("/update-cccd/{driverId}")
-    public ResponseEntity<ErrorCode> updateIdentifierCard(
+    public ApiResponse<IdentifierCardResponse> updateIdentifierCard(
             @PathVariable String driverId,
-            @RequestBody IdentifierCardRequest request) {
-        driverService.updateIdentifierCard(driverId, request);
-        return ResponseEntity.ok(ErrorCode.UPDATE_DRIVER_SUCCESS);
+            @RequestBody @Valid IdentifierCardRequest request) {
+
+        return ApiResponse.<IdentifierCardResponse>builder()
+                .code(ErrorCode.UPDATE_DRIVER_SUCCESS.getCode())
+                .result(driverService.updateIdentifierCard(driverId, request))
+                .message(ErrorCode.UPDATE_DRIVER_SUCCESS.getMessage())
+                .build();
     }
 
     @PutMapping("/update-license-car/{driverId}/{licenseCarId}")
-    public ResponseEntity<ErrorCode> updateLicenseCar(
+    public ApiResponse<LicenseCarResponse> updateLicenseCar(
             @PathVariable String driverId,
             @PathVariable String licenseCarId,
-            @RequestBody LicenseCarRequest request) {
+            @RequestBody @Valid LicenseCarRequest request) {
 
-        driverService.updateLicenseCar(licenseCarId, driverId, request);
-        return ResponseEntity.ok(ErrorCode.UPDATE_DRIVER_SUCCESS);
+        return ApiResponse.<LicenseCarResponse>builder()
+                .code(ErrorCode.UPDATE_DRIVER_SUCCESS.getCode())
+                .result(driverService.updateLicenseCar(licenseCarId,driverId, request))
+                .message(ErrorCode.UPDATE_DRIVER_SUCCESS.getMessage())
+                .build();
     }
 
 
     @PutMapping("/update-vehicle/{driverId}/{vehicleId}")
-    public ResponseEntity<ErrorCode> updateVehicleDetail(
+    public ApiResponse<VehicleDetailResponse> updateVehicleDetail(
             @PathVariable String driverId,
             @PathVariable String vehicleId,
-            @RequestBody VehicleDetailRequest request) {
+            @RequestBody @Valid VehicleDetailRequest request) {
 
-        driverService.updateVehicleDetail(vehicleId, driverId, request);
-        return ResponseEntity.ok(ErrorCode.UPDATE_DRIVER_SUCCESS);
+        return ApiResponse.<VehicleDetailResponse>builder()
+                .code(ErrorCode.UPDATE_DRIVER_SUCCESS.getCode())
+                .result(driverService.updateVehicleDetail(vehicleId,driverId, request))
+                .message(ErrorCode.UPDATE_DRIVER_SUCCESS.getMessage())
+                .build();
     }
 
-
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, String>> handleValidationExceptions(
+            MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getFieldErrors().forEach((FieldError error) -> {
+            errors.put(error.getField(), error.getDefaultMessage());
+        });
+        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+    }
 }

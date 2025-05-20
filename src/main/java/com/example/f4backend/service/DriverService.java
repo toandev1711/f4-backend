@@ -1,9 +1,6 @@
 package com.example.f4backend.service;
 
-import com.example.f4backend.dto.reponse.DriverResponse;
-import com.example.f4backend.dto.reponse.IdentifierCardResponse;
-import com.example.f4backend.dto.reponse.LicenseCarResponse;
-import com.example.f4backend.dto.reponse.VehicleDetailResponse;
+import com.example.f4backend.dto.reponse.*;
 import com.example.f4backend.dto.request.*;
 import com.example.f4backend.entity.*;
 import com.example.f4backend.enums.ErrorCode;
@@ -30,11 +27,11 @@ public class DriverService {
         DocumentStatusRepository documentStatusRepository;
         DriverMapper driverMapper;
 
-        DriverMapper.DriverInfoMapper driverInfoMapper;
-        DriverMapper.IdentifierCardMapper identifierCardMapper;
-        DriverMapper.LicenseCarMapper licenseCarMapper;
-        DriverMapper.VehicleDetailMapper vehicleDetailMapper;
-        DriverMapper.UserMapper userMapper;
+////        DriverMapper.DriverInfoMapper driverInfoMapper;
+//        DriverMapper.IdentifierCardMapper identifierCardMapper;
+//        DriverMapper.LicenseCarMapper licenseCarMapper;
+//        DriverMapper.VehicleDetailMapper vehicleDetailMapper;
+//        DriverMapper.UserMapper userMapper;
 
         public DriverResponse createDriver(DriverRequest request) {
                 if (!userRepository.existsById(request.getUserId()))
@@ -102,31 +99,34 @@ public class DriverService {
                 return driverMapper.toVehicleDetailResponse(vehicleDetailRepository.save(vehicleDetail));
         }
 
-        @Transactional
-        public void updateDriverInfo(String userId, DriverInfoRequest request) {
-                User user = userRepository.findById(userId)
-                                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_EXISTED));
-                driverInfoMapper.updateUserFromDto(request, user);
-                userRepository.save(user);
-        }
+//        @Transactional
+//        public UserResponse updateDriverInfo(String userId, DriverInfoRequest request) {
+//                User user = userRepository.findById(userId)
+//                                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_EXISTED));
+//                driverInfoMapper.updateUserFromDto(request, user);
+//                User updatedUser = userRepository.save(user);
+//                return driverInfoMapper.toResponseDto(updatedUser);
+//        }
 
-        public void updateIdentifierCard(String driverId, IdentifierCardRequest request) {
+        public IdentifierCardResponse updateIdentifierCard(String driverId, IdentifierCardRequest request) {
                 Driver driver = driverRepository.findById(driverId)
-                                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_EXISTED));
+                        .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_EXISTED));
 
                 DocumentStatus documentStatus = documentStatusRepository.findById(1)
-                                .orElseThrow(() -> new CustomException(ErrorCode.STATUS_NOT_FOUND));
+                        .orElseThrow(() -> new CustomException(ErrorCode.STATUS_NOT_FOUND));
 
                 IdentifierCard card = identifierCardRepository.findByDriverDriverId(driverId)
-                                .orElse(new IdentifierCard());
+                        .orElseThrow(() -> new CustomException(ErrorCode.DOCUMENT_NOT_FOUND));
 
+                driverMapper.updateIdentifierCardFromDto(request, card);
                 card.setDriver(driver);
                 card.setStatus(documentStatus);
-                identifierCardMapper.updateIdentifierCardFromDto(request, card);
 
-                identifierCardRepository.save(card);
+                IdentifierCard updatedCard = identifierCardRepository.save(card);
+                return driverMapper.toIdentifierCardResponse(updatedCard);
         }
-        public void updateLicenseCar(String licenseCarId, String driverId, LicenseCarRequest request) {
+
+        public LicenseCarResponse updateLicenseCar(String licenseCarId, String driverId, LicenseCarRequest request) {
                 Driver driver = driverRepository.findById(driverId)
                         .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_EXISTED));
 
@@ -135,16 +135,17 @@ public class DriverService {
 
                 LicenseCar license = licenseCarRepository.findByLicenseCarIdAndDriverDriverId(licenseCarId, driverId)
                         .orElseThrow(() -> new CustomException(ErrorCode.DOCUMENT_NOT_FOUND));
+                driverMapper.updateLicenseCarFromDto(request, license);
 
                 license.setDriver(driver);
                 license.setStatus(documentStatus);
-                licenseCarMapper.updateLicenseCarFromDto(request, license);
 
-                licenseCarRepository.save(license);
+                LicenseCar updatedLicenseCar = licenseCarRepository.save(license);
+                return driverMapper.toLicenseCarResponse(updatedLicenseCar);
         }
 
 
-        public VehicleDetail updateVehicleDetail(String vehicleId, String driverId, VehicleDetailRequest request) {
+        public VehicleDetailResponse updateVehicleDetail(String vehicleId, String driverId, VehicleDetailRequest request) {
                 Driver driver = driverRepository.findById(driverId)
                         .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_EXISTED));
 
@@ -153,11 +154,12 @@ public class DriverService {
 
                 VehicleDetail vehicle = vehicleDetailRepository.findByVehicleIdAndDriverDriverId(vehicleId, driverId)
                         .orElseThrow(() -> new CustomException(ErrorCode.DOCUMENT_NOT_FOUND));
+                driverMapper.updateVehicleDetailFromDto(request, vehicle);
 
                 vehicle.setDriver(driver);
                 vehicle.setStatus(documentStatus);
-                vehicleDetailMapper.updateVehicleDetailFromDto(request, vehicle);
 
-                return vehicleDetailRepository.save(vehicle);
+                VehicleDetail updatedVehicleDetail = vehicleDetailRepository.save(vehicle);
+                return driverMapper.toVehicleDetailResponse(updatedVehicleDetail);
         }
 }
