@@ -24,7 +24,6 @@ public class IdentifierCardRequest {
 
     private Integer statusId;
 
-    @NotNull(message = "CreateAt không được để trống")
     private Date createAt;
 
 }

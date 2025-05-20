@@ -39,6 +39,5 @@ public class LicenseCarRequest {
 
     private String statusId;
 
-    @NotNull(message = "CreateAt không được để trống")
     private Date CreateAt;
 }
