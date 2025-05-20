@@ -1,6 +1,5 @@
 package com.example.f4backend.configuration;
 
-
 import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +25,7 @@ import org.springframework.web.filter.CorsFilter;
 public class SecurityConfig {
 
     private final String[] PUBLIC_ENDPOINTS = {
-            "/auth/login", "/auth/introspect", "/auth/logout", "/auth/refresh", "/users",
+            "/auth/login", "/auth/introspect", "/auth/logout", "/auth/refresh", "/users", "/driver/**",
     };
     @Autowired
     private CustomJWTDecoder customJwtDecoder;

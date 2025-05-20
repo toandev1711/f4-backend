@@ -1,5 +1,6 @@
 package com.example.f4backend.dto.request;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.*;
@@ -19,6 +20,7 @@ public class UserCreationRequest {
     private String password;
     private String fullName;
     private String email;
+    @NotBlank(message = "LICENSE_NUMBER_NOT_BLANK")
     private String phone;
     private String address;
     private String profilePicture;
