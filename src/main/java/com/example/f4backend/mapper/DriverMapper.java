@@ -76,28 +76,16 @@ public interface DriverMapper {
     }
 
     // driver update
-    @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    public interface DriverInfoMapper {
-        void updateUserFromDto(DriverInfoRequest dto, @MappingTarget User entity);
-    }
+//    User updateUserFromDto(DriverInfoRequest dto, @MappingTarget User entity);
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    void updateIdentifierCardFromDto(IdentifierCardRequest request, @MappingTarget IdentifierCard IdentifierCard);
 
-    @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    public interface IdentifierCardMapper {
-        void updateIdentifierCardFromDto(IdentifierCardRequest dto, @MappingTarget IdentifierCard entity);
-    }
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    void updateLicenseCarFromDto(LicenseCarRequest request, @MappingTarget LicenseCar licenseCar);
 
-    @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    public interface LicenseCarMapper {
-        void updateLicenseCarFromDto(LicenseCarRequest dto, @MappingTarget LicenseCar entity);
-    }
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    void updateVehicleDetailFromDto(VehicleDetailRequest request, @MappingTarget VehicleDetail vehicleDetail);
 
-    @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    public interface VehicleDetailMapper {
-        void updateVehicleDetailFromDto(VehicleDetailRequest dto, @MappingTarget VehicleDetail entity);
-    }
 
-    @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    public interface UserMapper {
-        DriverInfoRequest toUserDto(User user);
-    }
+
 }
