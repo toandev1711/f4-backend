@@ -7,6 +7,7 @@ import com.example.f4backend.dto.request.*;
 import com.example.f4backend.enums.ErrorCode;
 //import com.example.f4backend.service.DriverService;
 import com.example.f4backend.repository.IdentifierCardRepository;
+import com.example.f4backend.service.CloudinaryService;
 import com.example.f4backend.service.DriverService;
 //import com.example.f4backend.service.UserService;
 import jakarta.validation.Valid;
@@ -18,6 +19,9 @@ import lombok.extern.slf4j.Slf4j;
 //import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @Slf4j
 @RestController
@@ -26,6 +30,32 @@ import org.springframework.web.bind.annotation.*;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class DriverController {
     private final DriverService driverService;
+    private final CloudinaryService cloudinaryService;
+
+    @PostMapping("/upload-image")
+    public ApiResponse<String> uploadImage(@RequestParam("image") MultipartFile image) throws IOException {
+        String uploadedImage = cloudinaryService.getImageUrlAfterUpload(image);
+
+        return ApiResponse.<String>builder()
+                .code(ErrorCode.CREATE_IDENTIFIERCARD_SUCCESS.getCode())
+                .result(uploadedImage)
+                .message("Upload successfull")
+                .build();
+    }
+
+    @PostMapping("/update-image")
+    public ApiResponse<String> updateImage(
+            @RequestParam("newImage") MultipartFile newImage,
+            @RequestParam("oldUrl") String oldUrl
+    ) throws IOException {
+        String newUrl = cloudinaryService.updateImage(newImage, oldUrl);
+        return ApiResponse.<String>builder()
+                .code(ErrorCode.CREATE_IDENTIFIERCARD_SUCCESS.getCode())
+                .message("Update successful")
+                .result(newUrl)
+                .build();
+    }
+
 
     @PostMapping("")
     public ApiResponse<DriverResponse> createDriver(@Valid @RequestBody DriverRequest request) {
