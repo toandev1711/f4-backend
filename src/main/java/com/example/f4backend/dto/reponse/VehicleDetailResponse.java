@@ -17,4 +17,5 @@ public class VehicleDetailResponse {
     private LocalDate issueDate;
     private LocalDate createAt;
     private String statusName;
+    private String vehicleTypeName;
 }

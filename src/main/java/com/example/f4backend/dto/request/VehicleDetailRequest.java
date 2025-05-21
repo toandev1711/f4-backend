@@ -34,5 +34,7 @@ public class VehicleDetailRequest {
 
     private String statusId;
 
+    private Integer vehicleTypeId;
+
     private Date createAt;
 }

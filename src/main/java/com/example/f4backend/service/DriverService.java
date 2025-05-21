@@ -25,6 +25,7 @@ public class DriverService {
         VehicleDetailRepository vehicleDetailRepository;
         LicenseCarRepository licenseCarRepository;
         DocumentStatusRepository documentStatusRepository;
+        VehicleTypeRepository vehicleTypeRepository;
         DriverMapper driverMapper;
 
 ////        DriverMapper.DriverInfoMapper driverInfoMapper;
@@ -33,6 +34,7 @@ public class DriverService {
 //        DriverMapper.VehicleDetailMapper vehicleDetailMapper;
 //        DriverMapper.UserMapper userMapper;
 
+        @Transactional
         public DriverResponse createDriver(DriverRequest request) {
                 if (!userRepository.existsById(request.getUserId()))
                         throw new CustomException(ErrorCode.USER_NOT_EXISTED);
@@ -46,6 +48,7 @@ public class DriverService {
                 return driverMapper.toDriverResponse(driverRepository.save(driver));
         }
 
+        @Transactional
         public IdentifierCardResponse createIdentifierCard(String driverId, IdentifierCardRequest request) {
                 // Check if driver exists
                 if (!driverRepository.existsByDriverId(driverId))
@@ -64,6 +67,7 @@ public class DriverService {
                 return driverMapper.toIdentifierCardResponse(identifierCardRepository.save(identifierCard));
         }
 
+        @Transactional
         public LicenseCarResponse createLicenseCar(String driverId, LicenseCarRequest request) {
                 // Check if driver exists
                 if (!driverRepository.existsByDriverId(driverId))
@@ -81,6 +85,7 @@ public class DriverService {
                 return driverMapper.toLicenseCarResponse(licenseCarRepository.save(licenseCar));
         }
 
+        @Transactional
         public VehicleDetailResponse createVehicleDetail(String driverId, VehicleDetailRequest request) {
                 // Check if driver exists
                 if (!driverRepository.existsByDriverId(driverId))
@@ -91,13 +96,17 @@ public class DriverService {
                                 .orElseThrow(() -> new RuntimeException("Driver not found"));
                 DocumentStatus documentStatus = documentStatusRepository.findById(1)
                                 .orElseThrow(() -> new RuntimeException("DocumentStatus not found"));
+                VehicleType vehicleType = vehicleTypeRepository.findById(request.getVehicleTypeId())
+                                .orElseThrow(() -> new RuntimeException("Vehicle not found"));
 
                 // Map and save VehicleDetail
                 VehicleDetail vehicleDetail = driverMapper.toVehicleDetail(request, driver, documentStatus);
                 vehicleDetail.setDriver(driver);
                 vehicleDetail.setStatus(documentStatus);
+                vehicleDetail.setVehicleType(vehicleType);
                 return driverMapper.toVehicleDetailResponse(vehicleDetailRepository.save(vehicleDetail));
         }
+
 
 //        @Transactional
 //        public UserResponse updateDriverInfo(String userId, DriverInfoRequest request) {
@@ -154,11 +163,15 @@ public class DriverService {
 
                 VehicleDetail vehicle = vehicleDetailRepository.findByVehicleIdAndDriverDriverId(vehicleId, driverId)
                         .orElseThrow(() -> new CustomException(ErrorCode.DOCUMENT_NOT_FOUND));
+
+                VehicleType vehicleType = vehicleTypeRepository.findById(request.getVehicleTypeId())
+                                .orElseThrow(() -> new CustomException(ErrorCode.DOCUMENT_NOT_FOUND));
+
                 driverMapper.updateVehicleDetailFromDto(request, vehicle);
 
                 vehicle.setDriver(driver);
                 vehicle.setStatus(documentStatus);
-
+                vehicle.setVehicleType(vehicleType);
                 VehicleDetail updatedVehicleDetail = vehicleDetailRepository.save(vehicle);
                 return driverMapper.toVehicleDetailResponse(updatedVehicleDetail);
         }
