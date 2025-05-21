@@ -44,4 +44,8 @@ public class VehicleDetail {
     @ManyToOne
     @JoinColumn(name = "status_id", nullable = false)
     private DocumentStatus status;
+
+    @ManyToOne
+    @JoinColumn(name = "vehical_type_id", nullable = false)
+    private VehicleType vehicleType;
 }
