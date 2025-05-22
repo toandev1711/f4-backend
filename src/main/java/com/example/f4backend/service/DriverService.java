@@ -12,7 +12,11 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -27,11 +31,11 @@ public class DriverService {
         DocumentStatusRepository documentStatusRepository;
         DriverMapper driverMapper;
 
-////        DriverMapper.DriverInfoMapper driverInfoMapper;
-//        DriverMapper.IdentifierCardMapper identifierCardMapper;
-//        DriverMapper.LicenseCarMapper licenseCarMapper;
-//        DriverMapper.VehicleDetailMapper vehicleDetailMapper;
-//        DriverMapper.UserMapper userMapper;
+        //// DriverMapper.DriverInfoMapper driverInfoMapper;
+        // DriverMapper.IdentifierCardMapper identifierCardMapper;
+        // DriverMapper.LicenseCarMapper licenseCarMapper;
+        // DriverMapper.VehicleDetailMapper vehicleDetailMapper;
+        // DriverMapper.UserMapper userMapper;
 
         public DriverResponse createDriver(DriverRequest request) {
                 if (!userRepository.existsById(request.getUserId()))
@@ -99,24 +103,25 @@ public class DriverService {
                 return driverMapper.toVehicleDetailResponse(vehicleDetailRepository.save(vehicleDetail));
         }
 
-//        @Transactional
-//        public UserResponse updateDriverInfo(String userId, DriverInfoRequest request) {
-//                User user = userRepository.findById(userId)
-//                                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_EXISTED));
-//                driverInfoMapper.updateUserFromDto(request, user);
-//                User updatedUser = userRepository.save(user);
-//                return driverInfoMapper.toResponseDto(updatedUser);
-//        }
+        // @Transactional
+        // public UserResponse updateDriverInfo(String userId, DriverInfoRequest
+        // request) {
+        // User user = userRepository.findById(userId)
+        // .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_EXISTED));
+        // driverInfoMapper.updateUserFromDto(request, user);
+        // User updatedUser = userRepository.save(user);
+        // return driverInfoMapper.toResponseDto(updatedUser);
+        // }
 
         public IdentifierCardResponse updateIdentifierCard(String driverId, IdentifierCardRequest request) {
                 Driver driver = driverRepository.findById(driverId)
-                        .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_EXISTED));
+                                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_EXISTED));
 
                 DocumentStatus documentStatus = documentStatusRepository.findById(1)
-                        .orElseThrow(() -> new CustomException(ErrorCode.STATUS_NOT_FOUND));
+                                .orElseThrow(() -> new CustomException(ErrorCode.STATUS_NOT_FOUND));
 
                 IdentifierCard card = identifierCardRepository.findByDriverDriverId(driverId)
-                        .orElseThrow(() -> new CustomException(ErrorCode.DOCUMENT_NOT_FOUND));
+                                .orElseThrow(() -> new CustomException(ErrorCode.DOCUMENT_NOT_FOUND));
 
                 driverMapper.updateIdentifierCardFromDto(request, card);
                 card.setDriver(driver);
@@ -128,13 +133,13 @@ public class DriverService {
 
         public LicenseCarResponse updateLicenseCar(String licenseCarId, String driverId, LicenseCarRequest request) {
                 Driver driver = driverRepository.findById(driverId)
-                        .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_EXISTED));
+                                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_EXISTED));
 
                 DocumentStatus documentStatus = documentStatusRepository.findById(1)
-                        .orElseThrow(() -> new CustomException(ErrorCode.STATUS_NOT_FOUND));
+                                .orElseThrow(() -> new CustomException(ErrorCode.STATUS_NOT_FOUND));
 
                 LicenseCar license = licenseCarRepository.findByLicenseCarIdAndDriverDriverId(licenseCarId, driverId)
-                        .orElseThrow(() -> new CustomException(ErrorCode.DOCUMENT_NOT_FOUND));
+                                .orElseThrow(() -> new CustomException(ErrorCode.DOCUMENT_NOT_FOUND));
                 driverMapper.updateLicenseCarFromDto(request, license);
 
                 license.setDriver(driver);
@@ -144,16 +149,16 @@ public class DriverService {
                 return driverMapper.toLicenseCarResponse(updatedLicenseCar);
         }
 
-
-        public VehicleDetailResponse updateVehicleDetail(String vehicleId, String driverId, VehicleDetailRequest request) {
+        public VehicleDetailResponse updateVehicleDetail(String vehicleId, String driverId,
+                        VehicleDetailRequest request) {
                 Driver driver = driverRepository.findById(driverId)
-                        .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_EXISTED));
+                                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_EXISTED));
 
                 DocumentStatus documentStatus = documentStatusRepository.findById(1)
-                        .orElseThrow(() -> new CustomException(ErrorCode.STATUS_NOT_FOUND));
+                                .orElseThrow(() -> new CustomException(ErrorCode.STATUS_NOT_FOUND));
 
                 VehicleDetail vehicle = vehicleDetailRepository.findByVehicleIdAndDriverDriverId(vehicleId, driverId)
-                        .orElseThrow(() -> new CustomException(ErrorCode.DOCUMENT_NOT_FOUND));
+                                .orElseThrow(() -> new CustomException(ErrorCode.DOCUMENT_NOT_FOUND));
                 driverMapper.updateVehicleDetailFromDto(request, vehicle);
 
                 vehicle.setDriver(driver);
@@ -161,5 +166,65 @@ public class DriverService {
 
                 VehicleDetail updatedVehicleDetail = vehicleDetailRepository.save(vehicle);
                 return driverMapper.toVehicleDetailResponse(updatedVehicleDetail);
+        }
+
+        // get Document
+
+        // getIdentiferCard
+        public IdentifierCardResponse getIdentifierCard() {
+                String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+                User user = userRepository.findByUsername(username)
+                                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_EXISTED));
+
+                Driver driver = driverRepository.findByUser(user)
+                                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_EXISTED));
+
+                String driverId = driver.getDriverId();
+
+                IdentifierCard identifierCard = identifierCardRepository.findByDriverDriverId(driverId)
+                                .orElseThrow(() -> new CustomException(ErrorCode.DOCUMENT_NOT_FOUND));
+                return driverMapper.toIdentifierCardResponse(identifierCard);
+        }
+
+        // get LicenseCar
+        public List<LicenseCarResponse> getLicenseCar() {
+                String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+                User user = userRepository.findByUsername(username)
+                                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_EXISTED));
+
+                Driver driver = driverRepository.findByUser(user)
+                                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_EXISTED));
+
+                String driverId = driver.getDriverId();
+
+                List<LicenseCar> licenseCars = licenseCarRepository.findByDriverDriverId(driverId);
+                if (licenseCars.isEmpty()) {
+                        throw new CustomException(ErrorCode.DOCUMENT_NOT_FOUND);
+                }
+                return licenseCars.stream()
+                                .map(driverMapper::toLicenseCarResponse)
+                                .collect(Collectors.toList());
+        }
+
+        public List<VehicleDetailResponse> getVehicleDetail() {
+                String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+                User user = userRepository.findByUsername(username)
+                                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_EXISTED));
+
+                Driver driver = driverRepository.findByUser(user)
+                                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_EXISTED));
+
+                String driverId = driver.getDriverId();
+
+                List<VehicleDetail> vehicleDetails = vehicleDetailRepository.findByDriverDriverId(driverId);
+                if (vehicleDetails.isEmpty()) {
+                        throw new CustomException(ErrorCode.DOCUMENT_NOT_FOUND);
+                }
+                return vehicleDetails.stream()
+                                .map(driverMapper::toVehicleDetailResponse)
+                                .collect(Collectors.toList());
         }
 }
