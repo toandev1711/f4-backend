@@ -34,6 +34,8 @@ public class CloudinaryService {
         return (String) upload.get("url");
     }
 
+    //TODO : delete image with imageURL
+
     //get publicId
     private String extractPublicIdFromUrl(String imageUrl) {
         int uploadIndex = imageUrl.indexOf("/upload/");

@@ -7,6 +7,7 @@ import com.example.f4backend.dto.request.*;
 import com.example.f4backend.enums.ErrorCode;
 //import com.example.f4backend.service.DriverService;
 import com.example.f4backend.repository.IdentifierCardRepository;
+import com.example.f4backend.repository.VehicleTypeRepository;
 import com.example.f4backend.service.CloudinaryService;
 import com.example.f4backend.service.DriverService;
 //import com.example.f4backend.service.UserService;
@@ -27,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -36,32 +38,6 @@ import java.util.Map;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class DriverController {
     private final DriverService driverService;
-//    private final CloudinaryService cloudinaryService;
-//
-//    @PostMapping("/upload-image")
-//    public ApiResponse<String> uploadImage(@RequestParam("image") MultipartFile image) throws IOException {
-//        String uploadedImage = cloudinaryService.getImageUrlAfterUpload(image);
-//
-//        return ApiResponse.<String>builder()
-//                .code(ErrorCode.CREATE_IDENTIFIERCARD_SUCCESS.getCode())
-//                .result(uploadedImage)
-//                .message("Upload successfull")
-//                .build();
-//    }
-//
-//    @PostMapping("/update-image")
-//    public ApiResponse<String> updateImage(
-//            @RequestParam("newImage") MultipartFile newImage,
-//            @RequestParam("oldUrl") String oldUrl
-//    ) throws IOException {
-//        String newUrl = cloudinaryService.updateImage(newImage, oldUrl);
-//        return ApiResponse.<String>builder()
-//                .code(ErrorCode.CREATE_IDENTIFIERCARD_SUCCESS.getCode())
-//                .message("Update successful")
-//                .result(newUrl)
-//                .build();
-//    }
-
 
     @PostMapping("")
     public ApiResponse<DriverResponse> createDriver(@Valid @RequestBody DriverRequest request) {
@@ -145,6 +121,17 @@ public class DriverController {
                 .message(ErrorCode.UPDATE_DRIVER_SUCCESS.getMessage())
                 .build();
     }
+
+    @GetMapping("/vehicle-type")
+    public ApiResponse<List<VehicleTypeResponse>> vehicleType() {
+        return ApiResponse.<List<VehicleTypeResponse>>builder()
+                .code(200)
+                .result(driverService.getVehicleType())
+                .message("VehicleType information")
+                .build();
+    }
+
+
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleValidationExceptions(
