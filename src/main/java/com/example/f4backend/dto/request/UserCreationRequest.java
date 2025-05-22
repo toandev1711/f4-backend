@@ -27,4 +27,5 @@ public class UserCreationRequest {
     private LocalDate dob;
     private LocalDate createdDate;
     private boolean isLocked;
+    private boolean isDriver;
 }

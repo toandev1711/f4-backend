@@ -101,7 +101,7 @@ public class AuthService {
     public String generateToken(User user){
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
-                .subject(user.getUsername())
+                .subject(user.getId())
                 .issuer("f4delivery")
                 .issueTime(new Date())
                 .expirationTime(new Date(
