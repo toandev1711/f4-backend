@@ -37,30 +37,32 @@ import java.util.Map;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class DriverController {
         private final DriverService driverService;
-        private final CloudinaryService cloudinaryService;
-
-        @PostMapping("/upload-image")
-        public ApiResponse<String> uploadImage(@RequestParam("image") MultipartFile image) throws IOException {
-                String uploadedImage = cloudinaryService.getImageUrlAfterUpload(image);
-
-                return ApiResponse.<String>builder()
-                                .code(ErrorCode.CREATE_IDENTIFIERCARD_SUCCESS.getCode())
-                                .result(uploadedImage)
-                                .message("Upload successfull")
-                                .build();
-        }
-
-        @PostMapping("/update-image")
-        public ApiResponse<String> updateImage(
-                        @RequestParam("newImage") MultipartFile newImage,
-                        @RequestParam("oldUrl") String oldUrl) throws IOException {
-                String newUrl = cloudinaryService.updateImage(newImage, oldUrl);
-                return ApiResponse.<String>builder()
-                                .code(ErrorCode.CREATE_IDENTIFIERCARD_SUCCESS.getCode())
-                                .message("Update successful")
-                                .result(newUrl)
-                                .build();
-        }
+        // private final CloudinaryService cloudinaryService;
+        //
+        // @PostMapping("/upload-image")
+        // public ApiResponse<String> uploadImage(@RequestParam("image") MultipartFile
+        // image) throws IOException {
+        // String uploadedImage = cloudinaryService.getImageUrlAfterUpload(image);
+        //
+        // return ApiResponse.<String>builder()
+        // .code(ErrorCode.CREATE_IDENTIFIERCARD_SUCCESS.getCode())
+        // .result(uploadedImage)
+        // .message("Upload successfull")
+        // .build();
+        // }
+        //
+        // @PostMapping("/update-image")
+        // public ApiResponse<String> updateImage(
+        // @RequestParam("newImage") MultipartFile newImage,
+        // @RequestParam("oldUrl") String oldUrl
+        // ) throws IOException {
+        // String newUrl = cloudinaryService.updateImage(newImage, oldUrl);
+        // return ApiResponse.<String>builder()
+        // .code(ErrorCode.CREATE_IDENTIFIERCARD_SUCCESS.getCode())
+        // .message("Update successful")
+        // .result(newUrl)
+        // .build();
+        // }
 
         @PostMapping("")
         public ApiResponse<DriverResponse> createDriver(@Valid @RequestBody DriverRequest request) {

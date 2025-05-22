@@ -1,9 +1,10 @@
 package com.example.f4backend.configuration;
 
+import com.example.f4backend.entity.DocumentStatus;
 import com.example.f4backend.entity.Role;
 import com.example.f4backend.entity.User;
-import com.example.f4backend.repository.RoleRepository;
-import com.example.f4backend.repository.UserRepository;
+import com.example.f4backend.entity.VehicleType;
+import com.example.f4backend.repository.*;
 import io.github.cdimascio.dotenv.Dotenv;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -25,6 +30,9 @@ import java.util.Set;
 public class AppInitConfig {
     PasswordEncoder passwordEncoder;
     RoleRepository roleRepository;
+    VehicleTypeRepository vehicleTypeRepository;
+    DocumentStatusRepository documentStatusRepository;
+
     @Bean
     ApplicationRunner applicationRunner(UserRepository userRepository){
         return args -> {
@@ -43,6 +51,29 @@ public class AppInitConfig {
                         .roles(Set.of(adminRole))
                         .build();
                 userRepository.save(admin);
+            }
+
+            // Preload VehicleType
+            if (vehicleTypeRepository.count() == 0) {
+                String[] vehicleTypes = {"Xe máy", "Xe 4 chỗ", "Xe 7 chỗ", "Xe tải"};
+                for (String typeName : vehicleTypes) {
+                    VehicleType vehicleType = new VehicleType();
+                    vehicleType.setVehicleTypeName(typeName);
+                    vehicleType.setCreateAt(Timestamp.valueOf(LocalDateTime.now()));
+                    vehicleTypeRepository.save(vehicleType);
+                }
+            }
+
+            // Preload DocumentStatus
+            if (documentStatusRepository.count() == 0) {
+                String[] statuses = {"PENDING", "APPROVED", "REJECTED"};
+                for (String statusName : statuses) {
+                    DocumentStatus status = new DocumentStatus();
+                    status.setStatusName(statusName);
+                    status.setCreateDate(Timestamp.valueOf(LocalDateTime.now()));
+                    documentStatusRepository.save(status);
+                }
+                log.info("Preloaded DocumentStatus data");
             }
         };
     }

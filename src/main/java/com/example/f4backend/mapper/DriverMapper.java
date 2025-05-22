@@ -62,6 +62,7 @@ public interface DriverMapper {
 
     @Mapping(target = "driverId", source = "driver.driverId")
     @Mapping(target = "statusName", source = "status.statusName")
+    @Mapping(target = "vehicleTypeName", source = "vehicleType.vehicleTypeName")
     VehicleDetailResponse toVehicleDetailResponse(VehicleDetail vehicleDetail);
 
     // Helper methods
@@ -88,7 +89,4 @@ public interface DriverMapper {
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "createAt", expression = "java(java.sql.Date.valueOf(java.time.LocalDate.now()))")
     void updateVehicleDetailFromDto(VehicleDetailRequest request, @MappingTarget VehicleDetail vehicleDetail);
-
-
-
 }
