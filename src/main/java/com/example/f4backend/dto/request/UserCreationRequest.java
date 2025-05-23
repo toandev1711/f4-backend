@@ -1,5 +1,6 @@
 package com.example.f4backend.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -27,5 +28,5 @@ public class UserCreationRequest {
     private LocalDate dob;
     private LocalDate createdDate;
     private boolean isLocked;
-    private boolean isDriver;
+    private int driver = 0;
 }
