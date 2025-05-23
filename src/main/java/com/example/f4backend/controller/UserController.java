@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     UserService userService;
     @PostMapping
-    public ApiResponse<UserResponse> create(@RequestBody UserCreationRequest request){
+    public ApiResponse<UserResponse> create(@ModelAttribute UserCreationRequest request){
         return ApiResponse.<UserResponse>
                 builder()
                 .code(ErrorCode.CREATE_USER_SUCCESS.getCode())
