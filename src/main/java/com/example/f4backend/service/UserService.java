@@ -71,7 +71,6 @@ public class UserService {
                 });
         }
         user.setRoles(Set.of(userRole));
-        userRepository.save(user);
         return userMapper.toUserResponse(userRepository.save(user));
     }
 
