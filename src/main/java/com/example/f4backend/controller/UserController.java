@@ -34,7 +34,7 @@ public class UserController {
     }
 
     @PutMapping("/{userId}")
-    public ApiResponse<UserResponse> update (@PathVariable String userId, @ModelAttribute UserUpdateRequest request ){
+    public ApiResponse<UserResponse> update (@PathVariable String userId, @RequestBody UserUpdateRequest request ){
         return ApiResponse.<UserResponse>
                         builder()
                 .code(1000)
