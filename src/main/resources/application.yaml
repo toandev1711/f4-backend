@@ -5,13 +5,11 @@ server:
 
 spring:
   datasource:
-    url: "jdbc:mysql://f4server.mysql.database.azure.com:3306/f4_delivery"
-    username: f4owner
-    password: Password@
+    url: "jdbc:mysql://localhost:3306/f4delivery"
+    username: root
+    password: root
 
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
-
-
