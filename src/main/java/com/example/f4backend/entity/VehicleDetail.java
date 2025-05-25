@@ -35,7 +35,6 @@ public class VehicleDetail {
     @Column(nullable = false)
     private String backPhoto;
 
-    @Column(nullable = false)
     private Date issueDate;
 
     @Column(nullable = false)

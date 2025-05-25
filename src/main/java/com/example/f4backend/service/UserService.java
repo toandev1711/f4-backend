@@ -41,25 +41,36 @@ public class UserService {
         if (userRepository.existsByPhone(request.getPhone()))
             throw new CustomException(ErrorCode.USER_EXISTED);
         int nextNumber = 1;
-
         if (lastUserNumber != null) {
             nextNumber = Integer.parseInt(lastUserNumber) + 1;
         }
-
-        Role userRole = roleRepository.findByName("USER")
+        Role userRole = new Role();
+        User user = userMapper.toUser(request);
+        user.setCreatedDate(LocalDate.now());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        String formatted = String.format("%09d", nextNumber);
+        user.setUserNumber(formatted);
+        user.setUsername(user.getUserNumber());
+        if(request.getDriver() == 0)
+        {
+            userRole = roleRepository.findByName("USER")
                 .orElseGet(() -> {
                     Role newRole = new Role();
                     newRole.setName("USER");
                     newRole.setDescription("Only for user");
                     return roleRepository.save(newRole);
                 });
-        User user = userMapper.toUser(request);
-        user.setCreatedDate(LocalDate.now());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        }
+        else{
+            userRole = roleRepository.findByName("DRIVER")
+                .orElseGet(() -> {
+                    Role newRole = new Role();
+                    newRole.setName("DRIVER");
+                    newRole.setDescription("Only for driver");
+                    return roleRepository.save(newRole);
+                });
+        }
         user.setRoles(Set.of(userRole));
-        String formatted = String.format("%09d", nextNumber);
-        user.setUserNumber(formatted);
-        user.setUsername(user.getUserNumber());
         return userMapper.toUserResponse(userRepository.save(user));
     }
 
@@ -77,9 +88,8 @@ public class UserService {
     public UserResponse myInfo(){
         var context = SecurityContextHolder.getContext();
         String name = context.getAuthentication().getName();
-        User user = userRepository.findByUsername(name)
+        User user = userRepository.findById(name)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_EXISTED));
         return userMapper.toUserResponse(user);
-
     }
 }

@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     UserService userService;
     @PostMapping
+   // public ApiResponse<UserResponse> create(@ModelAttribute UserCreationRequest request){
     public ApiResponse<UserResponse> create(@RequestBody UserCreationRequest request){
         return ApiResponse.<UserResponse>
                 builder()
@@ -34,9 +35,13 @@ public class UserController {
     }
 
     @PutMapping("/{userId}")
-    public String update (@PathVariable String userId, @RequestBody UserUpdateRequest request ){
-        log.info(userService.updateUser(userId, request).toString());
-        return "ok";
+    public ApiResponse<UserResponse> update (@PathVariable String userId, @ModelAttribute UserUpdateRequest request ){
+        return ApiResponse.<UserResponse>
+                        builder()
+                .code(1000)
+                .result(userService.updateUser(userId, request))
+                .message("Update successfully")
+                .build();
     }
 
     @GetMapping("/info")
