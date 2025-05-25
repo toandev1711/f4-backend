@@ -12,8 +12,6 @@ public class IdentifierCardRequest {
     @NotBlank(message = "LICENSE_NUMBER_NOT_BLANK")
     private String identifierNumber;
 
-    @NotNull(message = "issueDate không được để trống")
-    @PastOrPresent(message = "issueDate phải là ngày hiện tại hoặc trong quá khứ")
     private Date issueDate;
 
     @NotBlank(message = "frontPhoto không được để trống")

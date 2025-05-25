@@ -20,7 +20,6 @@ public class IdentifierCard {
     @Column(nullable = false)
     private String identifierNumber;
 
-    @Column(nullable = false)
     private Date issueDate;
 
     @Column(nullable = false)

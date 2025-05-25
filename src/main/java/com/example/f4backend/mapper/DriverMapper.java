@@ -6,6 +6,7 @@ import com.example.f4backend.entity.*;
 import com.example.f4backend.enums.DriverStatus;
 import com.example.f4backend.enums.DriverType;
 import com.example.f4backend.enums.Role;
+import com.example.f4backend.repository.VehicleTypeRepository;
 import org.mapstruct.*;
 import java.sql.Date;
 
@@ -64,6 +65,10 @@ public interface DriverMapper {
     @Mapping(target = "statusName", source = "status.statusName")
     @Mapping(target = "vehicleTypeName", source = "vehicleType.vehicleTypeName")
     VehicleDetailResponse toVehicleDetailResponse(VehicleDetail vehicleDetail);
+
+    @Mapping(target = "vehicleTypeId", source = "vehicleTypeId")
+    @Mapping(target = "vehicleTypeName", source = "vehicleTypeName")
+    VehicleTypeResponse VehicleTypeResponse(VehicleType vehicleType);
 
     // Helper methods
     @Named("mapDriverType")

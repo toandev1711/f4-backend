@@ -27,10 +27,8 @@ public class LicenseCar {
     @Column(nullable = false)
     private String place;
 
-    @Column(nullable = false)
     private Date issueDate;
 
-    @Column(nullable = false)
     private Date expiryDate;
 
     @Column(nullable = false)

@@ -14,6 +14,9 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -174,5 +177,15 @@ public class DriverService {
                 vehicle.setVehicleType(vehicleType);
                 VehicleDetail updatedVehicleDetail = vehicleDetailRepository.save(vehicle);
                 return driverMapper.toVehicleDetailResponse(updatedVehicleDetail);
+        }
+
+        public List<VehicleTypeResponse> getVehicleType() {
+                List<VehicleType> vehicleTypeList = vehicleTypeRepository.findAll();
+                if (vehicleTypeList.isEmpty()) {
+                        throw new CustomException(ErrorCode.DOCUMENT_NOT_FOUND);
+                }
+                return vehicleTypeList.stream()
+                        .map(driverMapper::VehicleTypeResponse)
+                        .collect(Collectors.toList());
         }
 }

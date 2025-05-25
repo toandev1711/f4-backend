@@ -16,10 +16,8 @@ public class VehicleDetailRequest {
     @NotBlank(message = "ownerName không được để trống")
     private String ownerName;
 
-    @NotBlank(message = "brand không được để trống")
     private String brand;
 
-    @NotBlank(message = "engineNumber không được để trống")
     private String engineNumber;
 
     @NotBlank(message = "frontPhoto không được để trống")
@@ -28,8 +26,6 @@ public class VehicleDetailRequest {
     @NotBlank(message = "backPhoto không được để trống")
     private String backPhoto;
 
-    @NotNull(message = "issueDate không được để trống")
-    @PastOrPresent(message = "issueDate phải là ngày hiện tại hoặc trong quá khứ")
     private Date issueDate;
 
     private String statusId;
