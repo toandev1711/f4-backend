@@ -20,15 +20,15 @@ public class Coordinates {
     @JoinColumn(name = "delivery_detail_id", nullable = false, unique = true)
     private DeliveryDetail deliveryDetail;
 
-    @Column(name = "pickup_latitude", nullable = false)
+    @Column(name = "pickup_latitude", nullable = false ,precision = 9, scale = 6)
     private BigDecimal pickupLatitude;
 
-    @Column(name = "pickup_longitude", nullable = false)
+    @Column(name = "pickup_longitude", nullable = false ,precision = 9, scale = 6)
     private BigDecimal pickupLongitude;
 
-    @Column(name = "dropoff_latitude", nullable = false)
+    @Column(name = "dropoff_latitude", nullable = false , precision = 9, scale = 6)
     private BigDecimal dropoffLatitude;
 
-    @Column(name = "dropoff_longitude", nullable = false)
+    @Column(name = "dropoff_longitude", nullable = false , precision = 9, scale = 6)
     private BigDecimal dropoffLongitude;
 }

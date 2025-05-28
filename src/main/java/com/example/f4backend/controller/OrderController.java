@@ -1,6 +1,7 @@
 package com.example.f4backend.controller;
 
 import com.example.f4backend.dto.reponse.*;
+import com.example.f4backend.dto.request.CoordinatesRequest;
 import com.example.f4backend.dto.request.DeliveryDetailRequest;
 import com.example.f4backend.dto.request.OrderRequest;
 import com.example.f4backend.enums.ErrorCode;
@@ -35,6 +36,17 @@ public class OrderController {
                         builder()
                 .code(ErrorCode.CREATE_ORDERDETAIL_SUCCESS.getCode())
                 .result(orderService.createDeliveryDetail(request))
+                .message(ErrorCode.CREATE_ORDERDETAIL_SUCCESS.getMessage())
+                .build();
+    }
+
+    @PostMapping("/create-detail/create-coordinates")
+    public ApiResponse<CoordinatesResponse> createCoordinates(@RequestBody CoordinatesRequest request) {
+        log.info("Received request to create coordinates for deliveryDetailId: {}", request.getDeliveryDetailId());
+        return ApiResponse.<CoordinatesResponse>
+                        builder()
+                .code(ErrorCode.CREATE_COORDINATES_SUCCESS.getCode())
+                .result(orderService.createCoordinates(request))
                 .message(ErrorCode.CREATE_ORDERDETAIL_SUCCESS.getMessage())
                 .build();
     }

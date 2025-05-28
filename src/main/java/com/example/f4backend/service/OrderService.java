@@ -1,18 +1,16 @@
 package com.example.f4backend.service;
 
+import com.example.f4backend.dto.reponse.CoordinatesResponse;
 import com.example.f4backend.dto.reponse.DeliveryDetailResponse;
 import com.example.f4backend.dto.reponse.OrderResponse;
+import com.example.f4backend.dto.request.CoordinatesRequest;
 import com.example.f4backend.dto.request.DeliveryDetailRequest;
 import com.example.f4backend.dto.request.OrderRequest;
-import com.example.f4backend.entity.DeliveryDetail;
-import com.example.f4backend.entity.Order;
-import com.example.f4backend.entity.OrderStatus;
-import com.example.f4backend.entity.VehicleType;
+import com.example.f4backend.entity.*;
+import com.example.f4backend.enums.ErrorCode;
+import com.example.f4backend.exception.CustomException;
 import com.example.f4backend.mapper.OrderMapper;
-import com.example.f4backend.repository.DeliveryDetailRepository;
-import com.example.f4backend.repository.OrderRepository;
-import com.example.f4backend.repository.OrderStatusRepository;
-import com.example.f4backend.repository.VehicleTypeRepository;
+import com.example.f4backend.repository.*;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +33,7 @@ public class OrderService {
     OrderMapper orderMapper;
     DeliveryDetailRepository  deliveryDetailRepository;
     VehicleTypeRepository vehicleTypeRepository;
+    CoordinatesRepository coordinatesRepository;
 
     public OrderResponse createOrder(OrderRequest request) {
         log.info("Creating order with request: {}", request);
@@ -89,60 +88,16 @@ public class OrderService {
 
     }
 
-//    @Transactional
-//    public DeliveryDetailResponse createDeliveryDetail(DeliveryDetailRequest request) {
-//        try {
-//            log.info("Starting createDeliveryDetail for orderId: {}", request.getOrderId());
-//
-//            // Kiểm tra đầu vào
-//            if (request.getPickupAddress() == null || request.getDropoffAddress() == null || request.getPrice() == null) {
-//                log.error("Missing required fields in request: pickupAddress={}, dropoffAddress={}, price={}",
-//                        request.getPickupAddress(), request.getDropoffAddress(), request.getPrice());
-//                throw new IllegalArgumentException("Missing required fields");
-//            }
-//            log.info("Input validation passed");
-//
-//            // Tìm Order
-//            log.info("Fetching Order with ID: {}", request.getOrderId());
-//            Order order = orderRepository.findById(request.getOrderId())
-//                    .orElseThrow(() -> {
-//                        log.error("Order not found with ID: {}", request.getOrderId());
-//                        return new EntityNotFoundException("Order not found with ID: " + request.getOrderId());
-//                    });
-//            log.info("Order found: {}", order.getOrderId());
-//
-//            // Tìm VehicleType
-//            log.info("Fetching VehicleType with ID: {}", request.getVehicleTypeId());
-//            VehicleType vehicleType = vehicleTypeRepository.findById(request.getVehicleTypeId())
-//                    .orElseThrow(() -> {
-//                        log.error("VehicleType not found with ID: {}", request.getVehicleTypeId());
-//                        return new RuntimeException("Vehicle not found");
-//                    });
-//            log.info("VehicleType found: {}", vehicleType.getVehicleTypeName());
-//
-//            // Ánh xạ DeliveryDetail
-//            log.info("Mapping DeliveryDetailRequest to DeliveryDetail");
-//            DeliveryDetail deliveryDetail = orderMapper.toDeliveryDetail(request);
-//            deliveryDetail.setOrder(order);
-//            deliveryDetail.setVehicleType(vehicleType);
-//            log.info("DeliveryDetail mapped and set with orderId: {}, vehicleTypeId: {}",
-//                    deliveryDetail.getOrder().getOrderId(), deliveryDetail.getVehicleType().getVehicleTypeId());
-//
-//            // Lưu DeliveryDetail
-//            log.info("Saving DeliveryDetail to database");
-//            DeliveryDetail savedDetail = deliveryDetailRepository.save(deliveryDetail);
-//            log.info("DeliveryDetail saved with ID: {}", savedDetail.getDeliveryDetailId());
-//
-//            // Ánh xạ sang Response
-//            log.info("Mapping saved DeliveryDetail to DeliveryDetailResponse");
-//            DeliveryDetailResponse response = orderMapper.toDeliveryDetailResponse(savedDetail);
-//            log.info("Response created successfully for DeliveryDetail ID: {}", savedDetail.getDeliveryDetailId());
-//
-//            return response;
-//        } catch (Exception e) {
-//            log.error("Error in createDeliveryDetail at orderId: {}. Error message: {}. Stack trace: {}",
-//                    request.getOrderId(), e.getMessage(), e.getStackTrace());
-//            throw new RuntimeException("Failed to create delivery detail: " + e.getMessage(), e);
-//        }
-//    }
+    @Transactional
+    public CoordinatesResponse createCoordinates(CoordinatesRequest request) {
+        if (coordinatesRepository.existsByDeliveryDetailDeliveryDetailId(request.getDeliveryDetailId())) {
+            throw new CustomException(ErrorCode.COORDINATES_ALREADY_EXISTS);
+        }
+        DeliveryDetail deliveryDetail = deliveryDetailRepository.findById(request.getDeliveryDetailId())
+                .orElseThrow(() -> new CustomException(ErrorCode.DELIVERY_DETAIL_NOT_EXISTS));
+        Coordinates coordinates = orderMapper.toCoordinates(request);
+        coordinates.setDeliveryDetail(deliveryDetail);
+
+        return  orderMapper.toCoordinatesResponse(coordinatesRepository.save(coordinates));
+    }
 }

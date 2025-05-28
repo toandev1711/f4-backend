@@ -3,4 +3,6 @@ package com.example.f4backend.repository;
 import com.example.f4backend.entity.Coordinates;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface CoordinatesRepository extends JpaRepository<Coordinates, Long> {}
+public interface CoordinatesRepository extends JpaRepository<Coordinates, String> {
+    boolean existsByDeliveryDetailDeliveryDetailId(String deliveryDetailId);
+}

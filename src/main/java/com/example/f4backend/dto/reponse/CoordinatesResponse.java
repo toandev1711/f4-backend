@@ -1,15 +1,15 @@
-package com.example.f4backend.dto.request;
+package com.example.f4backend.dto.reponse;
 
-import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
 import java.math.BigDecimal;
 
-@Getter
-@Setter
-public class CoordinatesRequest {
-    @NotNull
+@Data
+@AllArgsConstructor
+public class CoordinatesResponse {
+    private String coordinateId;
+
     private String deliveryDetailId;
     private BigDecimal pickupLatitude;
     private BigDecimal pickupLongitude;

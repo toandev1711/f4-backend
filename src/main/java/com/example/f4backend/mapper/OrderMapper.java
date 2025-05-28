@@ -1,12 +1,15 @@
 package com.example.f4backend.mapper;
 
+import com.example.f4backend.dto.reponse.CoordinatesResponse;
 import com.example.f4backend.dto.reponse.DeliveryDetailResponse;
 import com.example.f4backend.dto.reponse.OrderResponse;
+import com.example.f4backend.dto.request.CoordinatesRequest;
 import com.example.f4backend.dto.request.DeliveryDetailRequest;
 import com.example.f4backend.dto.request.OrderRequest;
+import com.example.f4backend.entity.Coordinates;
 import com.example.f4backend.entity.DeliveryDetail;
 import com.example.f4backend.entity.Order;
-import com.example.f4backend.enums.DriverType;
+
 import org.mapstruct.*;
 
 @Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR, unmappedTargetPolicy = ReportingPolicy.IGNORE)
@@ -29,5 +32,13 @@ public interface OrderMapper {
     @Mapping(target = "vehicleTypeName", source = "vehicleType.vehicleTypeName")
     @Mapping(target = "orderId", source = "order.orderId")
     DeliveryDetailResponse toDeliveryDetailResponse(DeliveryDetail deliveryDetail);
+
+    //COORDINATES
+    @Mapping(target = "coordinateId", ignore = true)
+    @Mapping(target = "deliveryDetail", ignore = true)
+    Coordinates toCoordinates(CoordinatesRequest request);
+
+    @Mapping(target = "deliveryDetailId", source = "deliveryDetail.deliveryDetailId")
+    CoordinatesResponse toCoordinatesResponse(Coordinates coordinates);
 }
 
