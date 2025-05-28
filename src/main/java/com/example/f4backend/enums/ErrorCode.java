@@ -15,6 +15,7 @@ public enum ErrorCode {
     LOGIN_SUSSCESS(200, "Login susscessfully", HttpStatus.OK),
     GET_SUSSCESS(200, "Get susscessed", HttpStatus.OK),
     UNAUTHENTICATED(1006, "Unauthenticated", HttpStatus.UNAUTHORIZED),
+    CREATE_ORDER_SUCCESS(1000, "Order created", HttpStatus.CREATED),
     CREATE_USER_SUCCESS(1000, "User has been created", HttpStatus.OK),
     CREATE_DRIVER_SUCCESS(1000, "Driver has been created", HttpStatus.OK),
     CREATE_IDENTIFIERCARD_SUCCESS(1000, "IndentifierCard has been created", HttpStatus.OK),
@@ -28,6 +29,8 @@ public enum ErrorCode {
     DOCUMENT_NOT_FOUND(1001, "No Document", HttpStatus.FOUND),
     STATUS_NOT_FOUND(1001, "No Status Document", HttpStatus.FOUND),
     UPDATE_DRIVER_SUCCESS(200, "Update driver successful", HttpStatus.OK),
+    CREATE_ORDERDETAIL_SUCCESS(1001, "Order detail has been created successfully", HttpStatus.OK);
+
     ;
 
     ErrorCode(int code, String message, HttpStatus httpStatus) {
