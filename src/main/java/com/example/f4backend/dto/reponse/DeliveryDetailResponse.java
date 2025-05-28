@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 public class DeliveryDetailResponse {
-    private Long deliveryDetailId;
+    private String deliveryDetailId;
     private String orderId;
     private String pickupAddress;
     private String dropoffAddress;

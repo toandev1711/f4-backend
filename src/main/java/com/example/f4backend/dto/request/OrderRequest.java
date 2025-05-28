@@ -9,6 +9,6 @@ import java.time.LocalDateTime;
 public class OrderRequest {
     private String orderType;
     private Date issueDate;
-    private int statusId;
+    private Integer statusId;
     private String notes;
 }

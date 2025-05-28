@@ -27,7 +27,7 @@ public class DeliveryDetail {
     private String dropoffAddress;
 
     @ManyToOne
-    @JoinColumn(name = "vehical_type_id", nullable = false)
+    @JoinColumn(name = "vehicle_type_id", nullable = false)
     private VehicleType vehicleType;
 
     @Column(name = "price", nullable = false)

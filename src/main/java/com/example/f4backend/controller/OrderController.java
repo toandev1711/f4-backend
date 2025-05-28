@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 public class OrderController {
     private final OrderService orderService;
 
-
     @PostMapping("/create")
     public ApiResponse<OrderResponse> createOrder(@RequestBody OrderRequest request){
         return ApiResponse.<OrderResponse>
@@ -32,7 +31,6 @@ public class OrderController {
 
     @PostMapping("/create-detail")
     public ApiResponse<DeliveryDetailResponse> createDetail(@RequestBody DeliveryDetailRequest request){
-        log.info("Delivery detail : {}" , orderService.createDeliveryDetail(request));
         return ApiResponse.<DeliveryDetailResponse>
                         builder()
                 .code(ErrorCode.CREATE_ORDERDETAIL_SUCCESS.getCode())

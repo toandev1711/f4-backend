@@ -14,10 +14,6 @@ public interface OrderMapper {
     @Mapping(target = "orderId", ignore = true)
     Order toOrder(OrderRequest request);
 
-    @Named("mapDriverType")
-    default DriverType mapDriverType(String type) {
-        return DriverType.valueOf(type.toUpperCase());
-    }
 
     @Mapping(source = "orderStatus.statusName", target = "statusName")
     OrderResponse toOrderResponse(Order order);
@@ -25,9 +21,13 @@ public interface OrderMapper {
     //ORDER DETAIL MAPPER
 
     @Mapping(target = "deliveryDetailId", ignore = true)
+    @Mapping(target = "vehicleType", ignore = true)
+    @Mapping(target = "order", ignore = true)
+    @Mapping(target = "order.orderId", source = "orderId")
     DeliveryDetail toDeliveryDetail(DeliveryDetailRequest request);
 
     @Mapping(target = "vehicleTypeName", source = "vehicleType.vehicleTypeName")
+    @Mapping(target = "orderId", source = "order.orderId")
     DeliveryDetailResponse toDeliveryDetailResponse(DeliveryDetail deliveryDetail);
 }
 

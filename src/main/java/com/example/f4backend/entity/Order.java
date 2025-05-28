@@ -28,6 +28,4 @@ public class Order {
 
     @Column(name = "notes")
     private String notes;
-
-
 }
