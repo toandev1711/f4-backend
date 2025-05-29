@@ -148,4 +148,12 @@ public class DriverController {
                                 .message("Vehicle detail information")
                                 .build();
         }
+        @GetMapping("/vehicle-type")
+        public ApiResponse<List<VehicleTypeResponse>> vehicleType() {
+                return ApiResponse.<List<VehicleTypeResponse>>builder()
+                        .code(200)
+                        .result(driverService.getVehicleType())
+                        .message("VehicleType information")
+                        .build();
+        }
 }

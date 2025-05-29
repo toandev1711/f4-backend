@@ -12,6 +12,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -234,5 +235,15 @@ public class DriverService {
                 return vehicleDetails.stream()
                                 .map(driverMapper::toVehicleDetailResponse)
                                 .collect(Collectors.toList());
+        }
+
+        public List<VehicleTypeResponse> getVehicleType() {
+                List<VehicleType> vehicleTypeList = vehicleTypeRepository.findAll();
+                if (vehicleTypeList.isEmpty()) {
+                        throw new CustomException(ErrorCode.DOCUMENT_NOT_FOUND);
+                }
+                return vehicleTypeList.stream()
+                        .map(driverMapper::VehicleTypeResponse)
+                        .collect(Collectors.toList());
         }
 }
