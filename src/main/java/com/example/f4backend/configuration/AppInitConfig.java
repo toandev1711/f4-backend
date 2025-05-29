@@ -1,9 +1,6 @@
 package com.example.f4backend.configuration;
 
-import com.example.f4backend.entity.DocumentStatus;
-import com.example.f4backend.entity.Role;
-import com.example.f4backend.entity.User;
-import com.example.f4backend.entity.VehicleType;
+import com.example.f4backend.entity.*;
 import com.example.f4backend.repository.*;
 import io.github.cdimascio.dotenv.Dotenv;
 import lombok.AccessLevel;
@@ -32,6 +29,7 @@ public class AppInitConfig {
     RoleRepository roleRepository;
     VehicleTypeRepository vehicleTypeRepository;
     DocumentStatusRepository documentStatusRepository;
+    OrderStatusRepository orderStatusRepository;
 
     @Bean
     ApplicationRunner applicationRunner(UserRepository userRepository){
@@ -74,6 +72,17 @@ public class AppInitConfig {
                     documentStatusRepository.save(status);
                 }
                 log.info("Preloaded DocumentStatus data");
+            }
+
+            // Preload OrderStatus
+            if (orderStatusRepository.count() == 0) {
+                String[] orderStatuses = {"PENDING", "PROCESSING", "COMPLETED", "CANCELLED"};
+                for (String statusName : orderStatuses) {
+                    OrderStatus status = new OrderStatus();
+                    status.setStatusName(statusName);
+                    orderStatusRepository.save(status);
+                }
+                log.info("Preloaded OrderStatus data");
             }
         };
     }
