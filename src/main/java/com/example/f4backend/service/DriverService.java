@@ -30,6 +30,8 @@ public class DriverService {
         LicenseCarRepository licenseCarRepository;
         DocumentStatusRepository documentStatusRepository;
         VehicleTypeRepository vehicleTypeRepository;
+        DriverStatusRepository driverStatusRepository;
+        DriverTypeRepository driverTypeRepository;
         DriverMapper driverMapper;
 
         //// DriverMapper.DriverInfoMapper driverInfoMapper;
@@ -244,6 +246,26 @@ public class DriverService {
                 }
                 return vehicleTypeList.stream()
                         .map(driverMapper::VehicleTypeResponse)
+                        .collect(Collectors.toList());
+        }
+
+        public List<DriverStatusResponse> getDriverStatus() {
+                List<DriverStatus> driverStatusList = driverStatusRepository.findAll();
+                if (driverStatusList.isEmpty()) {
+                        throw new CustomException(ErrorCode.DOCUMENT_NOT_FOUND);
+                }
+                return driverStatusList.stream()
+                        .map(driverMapper::toDriverStatusResponse)
+                        .collect(Collectors.toList());
+        }
+
+        public List<DriverTypeResponse> getDriverTypes() {
+                List<DriverType> driverTypesList = driverTypeRepository.findAll();
+                if (driverTypesList.isEmpty()) {
+                        throw new CustomException(ErrorCode.DOCUMENT_NOT_FOUND);
+                }
+                return driverTypesList.stream()
+                        .map(driverMapper::toDriverTypeResponse)
                         .collect(Collectors.toList());
         }
 }

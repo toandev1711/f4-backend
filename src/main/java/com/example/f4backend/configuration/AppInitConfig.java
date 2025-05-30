@@ -1,9 +1,6 @@
 package com.example.f4backend.configuration;
 
-import com.example.f4backend.entity.DocumentStatus;
-import com.example.f4backend.entity.Role;
-import com.example.f4backend.entity.User;
-import com.example.f4backend.entity.VehicleType;
+import com.example.f4backend.entity.*;
 import com.example.f4backend.repository.*;
 import io.github.cdimascio.dotenv.Dotenv;
 import lombok.AccessLevel;
@@ -32,6 +29,8 @@ public class AppInitConfig {
     RoleRepository roleRepository;
     VehicleTypeRepository vehicleTypeRepository;
     DocumentStatusRepository documentStatusRepository;
+    DriverStatusRepository driverStatusRepository;
+    DriverTypeRepository driverTypeRepository;
 
     @Bean
     ApplicationRunner applicationRunner(UserRepository userRepository){
@@ -74,6 +73,28 @@ public class AppInitConfig {
                     documentStatusRepository.save(status);
                 }
                 log.info("Preloaded DocumentStatus data");
+            }
+
+            // Preload DriverStatus
+            if (driverStatusRepository.count() == 0) {
+                String[] statuses = {"AVAILABLE", "BUSY", "OFFLINE"};
+                for (String statusName : statuses) {
+                    DriverStatus status = new DriverStatus();
+                    status.setDriverStatusName(statusName);
+                    driverStatusRepository.save(status);
+                }
+                log.info("Preloaded DriverStatus data");
+            }
+
+            // Preload DirverType
+            if (driverTypeRepository.count() == 0) {
+                String[] statuses = {"PASSENGER", "CARGO"};
+                for (String statusName : statuses) {
+                    DriverType status = new DriverType();
+                    status.setDriverTypeName(statusName);
+                    driverTypeRepository.save(status);
+                }
+                log.info("Preloaded DriverType data");
             }
         };
     }

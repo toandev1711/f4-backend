@@ -70,6 +70,14 @@ public interface DriverMapper {
     @Mapping(target = "vehicleTypeName", source = "vehicleTypeName")
     VehicleTypeResponse VehicleTypeResponse(VehicleType vehicleType);
 
+    @Mapping(target = "driverTypeId", source = "driverTypeId")
+    @Mapping(target = "driverTypeName", source = "driverTypeName")
+    DriverTypeResponse toDriverTypeResponse(com.example.f4backend.entity.DriverType driverType);
+
+    @Mapping(target = "driverStatusId", source = "driverStatusId")
+    @Mapping(target = "driverStatusName", source = "driverStatusName")
+    DriverStatusResponse toDriverStatusResponse(com.example.f4backend.entity.DriverStatus driverStatus);
+
     // Helper methods
     @Named("mapDriverType")
     default DriverType mapDriverType(String type) {

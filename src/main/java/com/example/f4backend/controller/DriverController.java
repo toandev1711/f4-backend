@@ -156,4 +156,20 @@ public class DriverController {
                         .message("VehicleType information")
                         .build();
         }
+        @GetMapping("/driver-type")
+        public ApiResponse<List<DriverTypeResponse>> driverType() {
+                return ApiResponse.<List<DriverTypeResponse>>builder()
+                        .code(200)
+                        .result(driverService.getDriverTypes())
+                        .message("DriverType information")
+                        .build();
+        }
+        @GetMapping("/driver-status")
+        public ApiResponse<List<DriverStatusResponse>> driverStatus() {
+                return ApiResponse.<List<DriverStatusResponse>>builder()
+                        .code(200)
+                        .result(driverService.getDriverStatus())
+                        .message("VehicleType information")
+                        .build();
+        }
 }
