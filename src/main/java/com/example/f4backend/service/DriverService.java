@@ -17,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -35,6 +36,7 @@ public class DriverService {
         DriverTypeRepository driverTypeRepository;
         DriverMapper driverMapper;
         PasswordEncoder passwordEncoder;
+        RoleRepository roleRepository;
 
 
         @Transactional
@@ -51,6 +53,16 @@ public class DriverService {
                 driver.setPassword(passwordEncoder.encode(request.getPassword()));
                 driver.setDriverType(driverType);
                 driver.setDriverStatus(driverStatus);
+
+                Role driverRole = new Role();
+                driverRole = roleRepository.findByName("DRIVER")
+                        .orElseGet(() -> {
+                                Role newRole = new Role();
+                                newRole.setName("DRIVER");
+                                newRole.setDescription("Only for driver");
+                                return roleRepository.save(newRole);
+                        });
+                driver.setRoles(Set.of(driverRole));
 
                 return driverMapper.toDriverResponse(driverRepository.save(driver));
         }

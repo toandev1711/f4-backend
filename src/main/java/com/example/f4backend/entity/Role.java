@@ -21,4 +21,7 @@ public class Role {
 
     @ManyToMany(mappedBy = "roles")
     private Set<User> users = new HashSet<>();
+
+    @ManyToMany(mappedBy = "roles")
+    private Set<Driver> drivers = new HashSet<>();
 }
