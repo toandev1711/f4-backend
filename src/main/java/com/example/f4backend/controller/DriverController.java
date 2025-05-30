@@ -39,11 +39,6 @@ import java.util.Map;
 public class DriverController {
         private final DriverService driverService;
 
-        @GetMapping
-        public String hello(){
-                return "Hello";
-        }
-
         @PostMapping
         public ApiResponse<DriverResponse> createDriver(@Valid @RequestBody DriverRequest request) {
                 return ApiResponse.<DriverResponse>builder()
