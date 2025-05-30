@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,6 +34,7 @@ public class DriverService {
         DriverStatusRepository driverStatusRepository;
         DriverTypeRepository driverTypeRepository;
         DriverMapper driverMapper;
+        PasswordEncoder passwordEncoder;
 
 
         @Transactional
@@ -46,6 +48,7 @@ public class DriverService {
 
                 // Map and save Driver
                 Driver driver = driverMapper.toDriver(request , driverStatus ,driverType);
+                driver.setPassword(passwordEncoder.encode(request.getPassword()));
                 driver.setDriverType(driverType);
                 driver.setDriverStatus(driverStatus);
 
