@@ -9,10 +9,10 @@ import org.mapstruct.*;
 public interface DriverMapper {
 
     @Mapping(target = "driverId", ignore = true)
-    @Mapping(target = "driverStatus",source = "driverStatus")
+    @Mapping(target = "driverStatus", source = "driverStatus")
     @Mapping(target = "driverType", source = "driverType")
     @Mapping(target = "createDate", expression = "java(java.sql.Date.valueOf(java.time.LocalDate.now()))")
-    Driver toDriver(DriverRequest request , DriverStatus driverStatus ,DriverType driverType);
+    Driver toDriver(DriverRequest request, DriverStatus driverStatus, DriverType driverType);
 
     @Mapping(target = "identifierId", ignore = true)
     @Mapping(target = "createAt", expression = "java(java.sql.Date.valueOf(java.time.LocalDate.now()))")
@@ -32,9 +32,9 @@ public interface DriverMapper {
     @Mapping(target = "driver", source = "driver")
     LicenseCar toLicenseCar(LicenseCarRequest request, Driver driver, DocumentStatus status);
 
-    //To Response
-//    @Mapping(target = "userId", source = "user.id")
-//    DriverResponse toDriverResponse(Driver driver);
+    // To Response
+    // @Mapping(target = "userId", source = "user.id")
+    // DriverResponse toDriverResponse(Driver driver);
 
     // Entity to Response
     @Mapping(target = "driverTypeName", source = "driverType.driverTypeName")
@@ -67,7 +67,9 @@ public interface DriverMapper {
     DriverStatusResponse toDriverStatusResponse(com.example.f4backend.entity.DriverStatus driverStatus);
 
     // driver update
-//    User updateUserFromDto(DriverInfoRequest dto, @MappingTarget User entity);
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    void updateDriver(@MappingTarget Driver driver, DriverUpdateRequest request);
+
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "createAt", expression = "java(java.sql.Date.valueOf(java.time.LocalDate.now()))")
     void updateIdentifierCardFromDto(IdentifierCardRequest request, @MappingTarget IdentifierCard IdentifierCard);

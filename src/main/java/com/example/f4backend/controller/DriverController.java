@@ -81,95 +81,121 @@ public class DriverController {
                                 .build();
         }
 
-        // updateDriver
+        // updateDriver and document
 
-//        @PutMapping("/update-cccd")
-//        public ApiResponse<IdentifierCardResponse> updateIdentifierCard(
-//                        @RequestBody @Valid IdentifierCardRequest request) {
-//
-//                return ApiResponse.<IdentifierCardResponse>builder()
-//                                .code(ErrorCode.UPDATE_DRIVER_SUCCESS.getCode())
-//                                .result(driverService.updateIdentifierCard(request))
-//                                .message(ErrorCode.UPDATE_DRIVER_SUCCESS.getMessage())
-//                                .build();
-//        }
-//
-//        @PutMapping("/update-license-car/{licenseCarId}")
-//        public ApiResponse<LicenseCarResponse> updateLicenseCar(
-//                        @PathVariable String licenseCarId,
-//                        @RequestBody @Valid LicenseCarRequest request) {
-//
-//                System.out.println("Received updateLicense request for ID: " + licenseCarId);
-//                System.out.println("Request data: " + request);
-//
-//                return ApiResponse.<LicenseCarResponse>builder()
-//                                .code(ErrorCode.UPDATE_DRIVER_SUCCESS.getCode())
-//                                .result(driverService.updateLicenseCar(licenseCarId, request))
-//                                .message(ErrorCode.UPDATE_DRIVER_SUCCESS.getMessage())
-//                                .build();
-//        }
-//
-//        @PutMapping("/update-vehicle/{vehicleId}")
-//        public ApiResponse<VehicleDetailResponse> updateVehicleDetail(
-//                        @PathVariable String vehicleId,
-//                        @RequestBody @Valid VehicleDetailRequest request) {
-//
-//                return ApiResponse.<VehicleDetailResponse>builder()
-//                                .code(ErrorCode.UPDATE_DRIVER_SUCCESS.getCode())
-//                                .result(driverService.updateVehicleDetail(vehicleId, request))
-//                                .message(ErrorCode.UPDATE_DRIVER_SUCCESS.getMessage())
-//                                .build();
-//        }
-//
-//        // getDocument
-//        // get IdntifierCar
-//        @GetMapping("/IdntifierCarInfo")
-//        public ApiResponse<IdentifierCardResponse> idntifierCarInfo() {
-//                return ApiResponse.<IdentifierCardResponse>builder()
-//                                .result(driverService.getIdentifierCard())
-//                                .message("CCCD information")
-//                                .build();
-//        }
-//
-//        @GetMapping("/LicenseCarInfo")
-//        public ApiResponse<List<LicenseCarResponse>> getLicenseCar() {
-//                List<LicenseCarResponse> licenseCars = driverService.getLicenseCar();
-//                return ApiResponse.<List<LicenseCarResponse>>builder()
-//                                .result(licenseCars)
-//                                .message("License car information")
-//                                .build();
-//        }
-//
-//        @GetMapping("/VehicleDetailInfo")
-//        public ApiResponse<List<VehicleDetailResponse>> getVehicleDetail() {
-//                List<VehicleDetailResponse> vehicleDetails = driverService.getVehicleDetail();
-//                return ApiResponse.<List<VehicleDetailResponse>>builder()
-//                                .result(vehicleDetails)
-//                                .message("Vehicle detail information")
-//                                .build();
-//        }
+        @PutMapping("/{driverId}")
+        public ApiResponse<DriverResponse> updateDriver(@PathVariable String driverId,
+                        @RequestBody DriverUpdateRequest request) {
+                return ApiResponse.<DriverResponse>builder()
+                                .code(1000)
+                                .result(driverService.updateDriver(driverId, request))
+                                .message("Update successfully")
+                                .build();
+        }
+
+        @PutMapping("/update-cccd/{driverId}")
+        public ApiResponse<IdentifierCardResponse> updateIdentifierCard(
+                        @PathVariable String driverId,
+                        @RequestBody @Valid IdentifierCardRequest request) {
+                return ApiResponse.<IdentifierCardResponse>builder()
+                                .code(ErrorCode.UPDATE_DRIVER_SUCCESS.getCode())
+                                .result(driverService.updateIdentifierCard(driverId, request))
+                                .message(ErrorCode.UPDATE_DRIVER_SUCCESS.getMessage())
+                                .build();
+        }
+
+        @PutMapping("/update-license-car/{driverId}/{licenseCarId}")
+        public ApiResponse<LicenseCarResponse> updateLicenseCar(
+                        @PathVariable String driverId,
+                        @PathVariable String licenseCarId,
+                        @RequestBody @Valid LicenseCarRequest request) {
+
+                System.out.println("Received updateLicense request for ID: " + licenseCarId);
+                System.out.println("Request data: " + request);
+
+                return ApiResponse.<LicenseCarResponse>builder()
+                                .code(ErrorCode.UPDATE_DRIVER_SUCCESS.getCode())
+                                .result(driverService.updateLicenseCar(driverId, licenseCarId, request))
+                                .message(ErrorCode.UPDATE_DRIVER_SUCCESS.getMessage())
+                                .build();
+        }
+
+        @PutMapping("/update-vehicle/{driverId}/{vehicleId}")
+        public ApiResponse<VehicleDetailResponse> updateVehicleDetail(
+                        @PathVariable String driverId,
+                        @PathVariable String vehicleId,
+                        @RequestBody @Valid VehicleDetailRequest request) {
+
+                return ApiResponse.<VehicleDetailResponse>builder()
+                                .code(ErrorCode.UPDATE_DRIVER_SUCCESS.getCode())
+                                .result(driverService.updateVehicleDetail(driverId, vehicleId, request))
+                                .message(ErrorCode.UPDATE_DRIVER_SUCCESS.getMessage())
+                                .build();
+        }
+
+        // getDocument and driverinfo
+        // get IdntifierCar
+        @GetMapping("/{driverId}/IdntifierCarInfo")
+        public ApiResponse<IdentifierCardResponse> idntifierCarInfo(@PathVariable String driverId) {
+                return ApiResponse.<IdentifierCardResponse>builder()
+                                .result(driverService.getIdentifierCard(driverId))
+                                .message("CCCD information")
+                                .build();
+        }
+
+        // get licensecar
+        @GetMapping("/{driverId}/LicenseCarInfo")
+        public ApiResponse<List<LicenseCarResponse>> getLicenseCar(@PathVariable String driverId) {
+                List<LicenseCarResponse> licenseCars = driverService.getLicenseCar(driverId);
+                return ApiResponse.<List<LicenseCarResponse>>builder()
+                                .result(licenseCars)
+                                .message("License car information")
+                                .build();
+        }
+
+        // get vehicle
+        @GetMapping("/{driverId}/VehicleDetailInfo")
+        public ApiResponse<List<VehicleDetailResponse>> getVehicleDetail(@PathVariable String driverId) {
+                List<VehicleDetailResponse> vehicleDetails = driverService.getVehicleDetail(driverId);
+                return ApiResponse.<List<VehicleDetailResponse>>builder()
+                                .result(vehicleDetails)
+                                .message("Vehicle detail information")
+                                .build();
+        }
+
+        // get driver info
+        @GetMapping("/driverinfo")
+        public ApiResponse<DriverResponse> myInfo() {
+                return ApiResponse.<DriverResponse>builder()
+                                .result(driverService.driverInfo())
+                                .message("Your information")
+                                .build();
+        }
+
         @GetMapping("/vehicle-type")
         public ApiResponse<List<VehicleTypeResponse>> vehicleType() {
                 return ApiResponse.<List<VehicleTypeResponse>>builder()
-                        .code(200)
-                        .result(driverService.getVehicleType())
-                        .message("VehicleType information")
-                        .build();
+                                .code(200)
+                                .result(driverService.getVehicleType())
+                                .message("VehicleType information")
+                                .build();
         }
+
         @GetMapping("/driver-type")
         public ApiResponse<List<DriverTypeResponse>> driverType() {
                 return ApiResponse.<List<DriverTypeResponse>>builder()
-                        .code(200)
-                        .result(driverService.getDriverTypes())
-                        .message("DriverType information")
-                        .build();
+                                .code(200)
+                                .result(driverService.getDriverTypes())
+                                .message("DriverType information")
+                                .build();
         }
+
         @GetMapping("/driver-status")
         public ApiResponse<List<DriverStatusResponse>> driverStatus() {
                 return ApiResponse.<List<DriverStatusResponse>>builder()
-                        .code(200)
-                        .result(driverService.getDriverStatus())
-                        .message("VehicleType information")
-                        .build();
+                                .code(200)
+                                .result(driverService.getDriverStatus())
+                                .message("VehicleType information")
+                                .build();
         }
 }
