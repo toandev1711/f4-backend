@@ -10,8 +10,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface DriverRepository extends JpaRepository<Driver, String> {
     boolean existsByDriverId(@NotNull String driverId);
-    Optional<User> findByPhone(String phoneNumber);
+
+    // Optional<User> findByPhone(String phoneNumber);
+    Optional<Driver> findByPhone(String phoneNumber);
+
     boolean existsByPhone(String phone);
-//    Optional<Driver> findByUserId(String userId);
+    // Optional<Driver> findByUserId(String userId);
 
 }
