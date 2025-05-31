@@ -27,10 +27,6 @@ import java.util.Set;
 public class AppInitConfig {
     PasswordEncoder passwordEncoder;
     RoleRepository roleRepository;
-    VehicleTypeRepository vehicleTypeRepository;
-    DocumentStatusRepository documentStatusRepository;
-    DriverStatusRepository driverStatusRepository;
-    DriverTypeRepository driverTypeRepository;
 
     @Bean
     ApplicationRunner applicationRunner(UserRepository userRepository){
@@ -50,51 +46,6 @@ public class AppInitConfig {
                         .roles(Set.of(adminRole))
                         .build();
                 userRepository.save(admin);
-            }
-
-            // Preload VehicleType
-            if (vehicleTypeRepository.count() == 0) {
-                String[] vehicleTypes = {"Xe máy", "Xe 4 chỗ", "Xe 7 chỗ", "Xe tải"};
-                for (String typeName : vehicleTypes) {
-                    VehicleType vehicleType = new VehicleType();
-                    vehicleType.setVehicleTypeName(typeName);
-                    vehicleType.setCreateAt(Timestamp.valueOf(LocalDateTime.now()));
-                    vehicleTypeRepository.save(vehicleType);
-                }
-            }
-
-            // Preload DocumentStatus
-            if (documentStatusRepository.count() == 0) {
-                String[] statuses = {"PENDING", "APPROVED", "REJECTED"};
-                for (String statusName : statuses) {
-                    DocumentStatus status = new DocumentStatus();
-                    status.setStatusName(statusName);
-                    status.setCreateDate(Timestamp.valueOf(LocalDateTime.now()));
-                    documentStatusRepository.save(status);
-                }
-                log.info("Preloaded DocumentStatus data");
-            }
-
-            // Preload DriverStatus
-            if (driverStatusRepository.count() == 0) {
-                String[] statuses = {"AVAILABLE", "BUSY", "OFFLINE"};
-                for (String statusName : statuses) {
-                    DriverStatus status = new DriverStatus();
-                    status.setDriverStatusName(statusName);
-                    driverStatusRepository.save(status);
-                }
-                log.info("Preloaded DriverStatus data");
-            }
-
-            // Preload DirverType
-            if (driverTypeRepository.count() == 0) {
-                String[] statuses = {"PASSENGER", "CARGO"};
-                for (String statusName : statuses) {
-                    DriverType status = new DriverType();
-                    status.setDriverTypeName(statusName);
-                    driverTypeRepository.save(status);
-                }
-                log.info("Preloaded DriverType data");
             }
         };
     }
