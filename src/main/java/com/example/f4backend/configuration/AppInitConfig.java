@@ -11,15 +11,12 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
-
-
 @Slf4j
 @Configuration
 @RequiredArgsConstructor
@@ -27,7 +24,6 @@ import java.util.Set;
 public class AppInitConfig {
     PasswordEncoder passwordEncoder;
     RoleRepository roleRepository;
-
     @Bean
     ApplicationRunner applicationRunner(UserRepository userRepository){
         return args -> {
@@ -47,8 +43,7 @@ public class AppInitConfig {
                         .build();
                 userRepository.save(admin);
             }
+
         };
     }
-
-
 }
