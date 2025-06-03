@@ -17,8 +17,11 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -26,7 +29,7 @@ import org.springframework.web.filter.CorsFilter;
 public class SecurityConfig {
 
     private final String[] PUBLIC_ENDPOINTS = {
-            "/auth/**", "/auth/introspect", "/auth/logout", "/auth/refresh", "/users", "/driver/**" , "/images/**","/order/**"
+            "/auth/**", "/ws/**", "/booking/**", "/auth/introspect", "/auth/logout", "/auth/refresh", "/users", "/driver/**" , "/images/**","/order/**"
     };
     @Autowired
     private CustomJWTDecoder customJwtDecoder;
@@ -49,14 +52,15 @@ public class SecurityConfig {
     }
 
     @Bean
-    public CorsFilter corsFilter(){
-        CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.addAllowedOrigin("*");
-        corsConfiguration.addAllowedHeader("*");
-        corsConfiguration.addAllowedMethod("*");
-        UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
-        urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
-        return new CorsFilter(urlBasedCorsConfigurationSource);
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(List.of("http://localhost:5500"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowCredentials(true);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 
 
