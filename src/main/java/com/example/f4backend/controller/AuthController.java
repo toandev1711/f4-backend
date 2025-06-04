@@ -25,10 +25,18 @@ public class AuthController {
 
     final AuthService authenticationService;
 
-    @PostMapping("/login")
-    public ApiResponse<AuthResponse> login(@RequestBody AuthRequest request) {
+    @PostMapping("/user")
+    public ApiResponse<AuthResponse> loginUser(@RequestBody AuthRequest request) {
         ApiResponse<AuthResponse> apiResponse = new ApiResponse<>();
         apiResponse.setResult(authenticationService.authenticate(request));
+        apiResponse.setCode(ErrorCode.LOGIN_SUSSCESS.getCode());
+        return apiResponse;
+    }
+
+    @PostMapping("/driver")
+    public ApiResponse<AuthResponse> loginDriver(@RequestBody AuthRequest request) {
+            ApiResponse<AuthResponse> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(authenticationService.authenticateDriver(request));
         apiResponse.setCode(ErrorCode.LOGIN_SUSSCESS.getCode());
         return apiResponse;
     }

@@ -3,31 +3,16 @@ package com.example.f4backend.mapper;
 import com.example.f4backend.dto.reponse.*;
 import com.example.f4backend.dto.request.*;
 import com.example.f4backend.entity.*;
-import com.example.f4backend.enums.DriverStatus;
-import com.example.f4backend.enums.DriverType;
-import com.example.f4backend.enums.Role;
-import com.example.f4backend.repository.VehicleTypeRepository;
 import org.mapstruct.*;
-import java.sql.Date;
-
-import java.time.LocalDate;
-import java.util.Collections;
 
 @Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface DriverMapper {
 
-    // Request to Entity
-    // @Mapping(target = "id", ignore = true)
-    // @Mapping(target = "createdDate", expression =
-    // "java(java.time.LocalDate.now())")
-    // @Mapping(target = "roles", expression =
-    // "java(java.util.Collections.singleton(com.example.f4backend.enums.Role.DRIVER))")
-    // User toUser(UserCreationRequest request);
-
     @Mapping(target = "driverId", ignore = true)
-    @Mapping(target = "driverType", qualifiedByName = "mapDriverType")
-    @Mapping(target = "driverStatus", qualifiedByName = "mapDriverStatus")
-    Driver toDriver(DriverRequest request);
+    @Mapping(target = "driverStatus", source = "driverStatus")
+    @Mapping(target = "driverType", source = "driverType")
+    @Mapping(target = "createDate", expression = "java(java.sql.Date.valueOf(java.time.LocalDate.now()))")
+    Driver toDriver(DriverRequest request, DriverStatus driverStatus, DriverType driverType);
 
     @Mapping(target = "identifierId", ignore = true)
     @Mapping(target = "createAt", expression = "java(java.sql.Date.valueOf(java.time.LocalDate.now()))")
@@ -47,10 +32,13 @@ public interface DriverMapper {
     @Mapping(target = "driver", source = "driver")
     LicenseCar toLicenseCar(LicenseCarRequest request, Driver driver, DocumentStatus status);
 
-    // Entity to Response
-    // UserResponse toUserResponse(User user);
+    // To Response
+    // @Mapping(target = "userId", source = "user.id")
+    // DriverResponse toDriverResponse(Driver driver);
 
-    @Mapping(target = "userId", source = "user.id")
+    // Entity to Response
+    @Mapping(target = "driverTypeName", source = "driverType.driverTypeName")
+    @Mapping(target = "driverStatusName", source = "driverStatus.driverStatusName")
     DriverResponse toDriverResponse(Driver driver);
 
     @Mapping(target = "driverId", source = "driver.driverId")
@@ -70,19 +58,18 @@ public interface DriverMapper {
     @Mapping(target = "vehicleTypeName", source = "vehicleTypeName")
     VehicleTypeResponse VehicleTypeResponse(VehicleType vehicleType);
 
-    // Helper methods
-    @Named("mapDriverType")
-    default DriverType mapDriverType(String type) {
-        return DriverType.valueOf(type.toUpperCase());
-    }
+    @Mapping(target = "driverTypeId", source = "driverTypeId")
+    @Mapping(target = "driverTypeName", source = "driverTypeName")
+    DriverTypeResponse toDriverTypeResponse(com.example.f4backend.entity.DriverType driverType);
 
-    @Named("mapDriverStatus")
-    default DriverStatus mapDriverStatus(String status) {
-        return DriverStatus.valueOf(status.toUpperCase());
-    }
+    @Mapping(target = "driverStatusId", source = "driverStatusId")
+    @Mapping(target = "driverStatusName", source = "driverStatusName")
+    DriverStatusResponse toDriverStatusResponse(com.example.f4backend.entity.DriverStatus driverStatus);
 
     // driver update
-//    User updateUserFromDto(DriverInfoRequest dto, @MappingTarget User entity);
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    void updateDriver(@MappingTarget Driver driver, DriverUpdateRequest request);
+
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "createAt", expression = "java(java.sql.Date.valueOf(java.time.LocalDate.now()))")
     void updateIdentifierCardFromDto(IdentifierCardRequest request, @MappingTarget IdentifierCard IdentifierCard);
@@ -94,4 +81,6 @@ public interface DriverMapper {
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "createAt", expression = "java(java.sql.Date.valueOf(java.time.LocalDate.now()))")
     void updateVehicleDetailFromDto(VehicleDetailRequest request, @MappingTarget VehicleDetail vehicleDetail);
+
+
 }

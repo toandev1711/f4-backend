@@ -1,13 +1,13 @@
 package com.example.f4backend.entity;
-import com.example.f4backend.enums.DriverStatus;
-import com.example.f4backend.enums.DriverType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.sql.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Data
@@ -20,27 +20,49 @@ public class Driver {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String driverId;
 
-    @OneToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "driver_type_id", nullable = false)
     private DriverType driverType;
 
-    @Column(nullable = false, columnDefinition = "decimal(10,2)")
-    private Double priceMoney;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "driver_status_id", nullable = false)
     private DriverStatus driverStatus;
 
-    @OneToOne(mappedBy = "driver")
-    private IdentifierCard identifierCard;
+    @Column(name = "gender")
+    private Boolean gender;
 
-    @OneToMany(mappedBy = "driver")
-    private List<LicenseCar> licenseCars;
+    @Column(name = "password", nullable = false, length = 255)
+    private String password;
 
-    @OneToMany(mappedBy = "driver")
-    private List<VehicleDetail> vehicleDetails;
+    @Column(name = "full_name", nullable = false, length = 255)
+    private String fullName;
+
+    @Column(name = "portrait")
+    private String portrait;
+
+    @Column(name = "date_birth")
+    private Date dateBirth;
+
+    @Column(name = "address", length = 255)
+    private String address;
+
+    @Column(name = "email")
+    private String email;
+
+    @Column(name = "phone", nullable = false, length = 10)
+    private String phone;
+
+    @Column(name = "create_date")
+    private Date createDate;
+
+    @Column(name = "isLocked")
+    private Boolean isLocked;
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.MERGE })
+    @JoinTable(
+            name = "drivers_roles",
+            joinColumns = @JoinColumn(name = "driver_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> roles = new HashSet<>();
 }

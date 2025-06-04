@@ -4,9 +4,11 @@ import com.example.f4backend.dto.reponse.AuthResponse;
 import com.example.f4backend.dto.reponse.IntrospectResponse;
 import com.example.f4backend.dto.request.AuthRequest;
 import com.example.f4backend.dto.request.IntrospectRequest;
+import com.example.f4backend.entity.Driver;
 import com.example.f4backend.entity.User;
 import com.example.f4backend.enums.ErrorCode;
 import com.example.f4backend.exception.CustomException;
+import com.example.f4backend.repository.DriverRepository;
 import com.example.f4backend.repository.InvalidtokenRepository;
 import com.example.f4backend.repository.UserRepository;
 import com.nimbusds.jose.*;
@@ -38,6 +40,7 @@ import java.util.UUID;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AuthService {
     UserRepository userRepository;
+    DriverRepository driverRepository;
     InvalidtokenRepository invalidtokenRepository;
     @NonFinal
     @Autowired
@@ -84,15 +87,32 @@ public class AuthService {
     }
 
     public AuthResponse authenticate(AuthRequest request){
-        var user = userRepository.findByPhone(request.getPhone())
+
+            var user = userRepository.findByPhone(request.getPhone())
+                    .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_EXISTED));
+
+            PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+            boolean isAuthenticate = passwordEncoder.matches(request.getPassword(), user.getPassword());
+
+            if(!isAuthenticate)
+                throw new CustomException(ErrorCode.LOGIN_FAULT);
+            var token  = generateToken(user);
+            return AuthResponse.builder()
+                    .isAuthenticated(isAuthenticate)
+                    .jwt(token)
+                    .build();
+    }
+
+    public AuthResponse authenticateDriver(AuthRequest request){
+        var driver = driverRepository.findByPhone(request.getPhone())
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_EXISTED));
 
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
-        boolean isAuthenticate = passwordEncoder.matches(request.getPassword(), user.getPassword());
+        boolean isAuthenticate = passwordEncoder.matches(request.getPassword(), driver.getPassword());
 
         if(!isAuthenticate)
             throw new CustomException(ErrorCode.LOGIN_FAULT);
-        var token  = generateToken(user);
+        var token  = generateTokenDriver(driver);
         return AuthResponse.builder()
                 .isAuthenticated(isAuthenticate)
                 .jwt(token)
@@ -120,6 +140,28 @@ public class AuthService {
             throw new RuntimeException(e);
         }
 
+    }public String generateTokenDriver(Driver driver){
+        JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
+        JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
+                .subject(driver.getDriverId())
+                .issuer("f4delivery")
+                .issueTime(new Date())
+                .expirationTime(new Date(
+                        Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli()
+                ))
+                .jwtID(UUID.randomUUID().toString())
+                .claim("scope", buildScopeDriver(driver))
+                .build();
+
+        Payload payload = new Payload(jwtClaimsSet.toJSONObject());
+        JWSObject jwsObject = new JWSObject(header, payload);
+        try {
+            jwsObject.sign(new MACSigner(SIGNER_KEY.getBytes()));
+            return jwsObject.serialize();
+        } catch (JOSEException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     private String buildScope(User user){
@@ -130,6 +172,17 @@ public class AuthService {
             });
         }
         stringJoiner.add(user.getId());
+        return stringJoiner.toString();
+    }
+
+    private String buildScopeDriver(Driver driver){
+        StringJoiner stringJoiner = new StringJoiner(" ");
+        if(!CollectionUtils.isEmpty(driver.getRoles())){
+            driver.getRoles().forEach(role -> {
+                stringJoiner.add("ROLE_" + role.getName());
+            });
+        }
+        stringJoiner.add(driver.getDriverId());
         return stringJoiner.toString();
     }
 }
