@@ -35,7 +35,7 @@ public class AuthController {
 
     @PostMapping("/driver")
     public ApiResponse<AuthResponse> loginDriver(@RequestBody AuthRequest request) {
-            ApiResponse<AuthResponse> apiResponse = new ApiResponse<>();
+        ApiResponse<AuthResponse> apiResponse = new ApiResponse<>();
         apiResponse.setResult(authenticationService.authenticateDriver(request));
         apiResponse.setCode(ErrorCode.LOGIN_SUSSCESS.getCode());
         return apiResponse;

@@ -296,6 +296,4 @@ public class DriverService {
                                 .map(driverMapper::toDriverTypeResponse)
                                 .collect(Collectors.toList());
         }
-
-
 }

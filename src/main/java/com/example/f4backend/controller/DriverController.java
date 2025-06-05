@@ -135,8 +135,8 @@ public class DriverController {
 
         // getDocument and driverinfo
         // get IdntifierCar
-        @GetMapping("/{driverId}/IdentifierCarInfo")
-        public ApiResponse<IdentifierCardResponse> identifierCarInfo(@PathVariable String driverId) {
+        @GetMapping("/{driverId}/IdntifierCarInfo")
+        public ApiResponse<IdentifierCardResponse> idntifierCarInfo(@PathVariable String driverId) {
                 return ApiResponse.<IdentifierCardResponse>builder()
                                 .result(driverService.getIdentifierCard(driverId))
                                 .message("CCCD information")
@@ -164,7 +164,7 @@ public class DriverController {
         }
 
         // get driver info
-        @GetMapping("/info")
+        @GetMapping("/driverinfo")
         public ApiResponse<DriverResponse> myInfo() {
                 return ApiResponse.<DriverResponse>builder()
                                 .result(driverService.driverInfo())
