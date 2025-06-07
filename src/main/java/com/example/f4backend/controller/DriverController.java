@@ -82,7 +82,6 @@ public class DriverController {
         }
 
         // updateDriver and document
-
         @PutMapping("/{driverId}")
         public ApiResponse<DriverResponse> updateDriver(@PathVariable String driverId,
                         @RequestBody DriverUpdateRequest request) {
@@ -133,18 +132,16 @@ public class DriverController {
                                 .build();
         }
 
-        // getDocument and driverinfo
         // get IdntifierCar
-        @GetMapping("/{driverId}/IdntifierCarInfo")
-        public ApiResponse<IdentifierCardResponse> idntifierCarInfo(@PathVariable String driverId) {
+        @GetMapping("/IdentifierCarInfo/{driverId}")
+        public ApiResponse<IdentifierCardResponse> identifierCarInfo(@PathVariable String driverId) {
                 return ApiResponse.<IdentifierCardResponse>builder()
                                 .result(driverService.getIdentifierCard(driverId))
                                 .message("CCCD information")
                                 .build();
         }
 
-        // get licensecar
-        @GetMapping("/{driverId}/LicenseCarInfo")
+        @GetMapping("/LicenseCarInfo/{driverId}")
         public ApiResponse<List<LicenseCarResponse>> getLicenseCar(@PathVariable String driverId) {
                 List<LicenseCarResponse> licenseCars = driverService.getLicenseCar(driverId);
                 return ApiResponse.<List<LicenseCarResponse>>builder()
@@ -153,8 +150,7 @@ public class DriverController {
                                 .build();
         }
 
-        // get vehicle
-        @GetMapping("/{driverId}/VehicleDetailInfo")
+        @GetMapping("/VehicleDetailInfo/{driverId}")
         public ApiResponse<List<VehicleDetailResponse>> getVehicleDetail(@PathVariable String driverId) {
                 List<VehicleDetailResponse> vehicleDetails = driverService.getVehicleDetail(driverId);
                 return ApiResponse.<List<VehicleDetailResponse>>builder()
@@ -163,8 +159,7 @@ public class DriverController {
                                 .build();
         }
 
-        // get driver info
-        @GetMapping("/driverinfo")
+        @GetMapping("/info")
         public ApiResponse<DriverResponse> myInfo() {
                 return ApiResponse.<DriverResponse>builder()
                                 .result(driverService.driverInfo())
