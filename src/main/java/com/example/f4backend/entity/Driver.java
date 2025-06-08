@@ -28,6 +28,10 @@ public class Driver {
     @JoinColumn(name = "driver_status_id", nullable = false)
     private DriverStatus driverStatus;
 
+    //
+    @OneToOne(mappedBy = "driver", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Wallet wallet;
+
     @Column(name = "gender")
     private Boolean gender;
 
