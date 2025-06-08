@@ -1,11 +1,13 @@
 package com.example.f4backend.dto.request;
 
+import lombok.Data;
+
 import java.math.BigDecimal;
 
+@Data
 public class TransactionRequest {
     private String driverId;
     private BigDecimal amount;
-    private Integer transactionTypeId;
 
     private String bankName;
     private String bankAccountNumber;
