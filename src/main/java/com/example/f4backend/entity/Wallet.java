@@ -22,8 +22,8 @@ public class Wallet {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String walletId;
 
-    @OneToOne
-    @JoinColumn(name = "driver_id" ,nullable = false)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "driver_id", nullable = false, unique = true)
     private Driver driver;
 
     private BigDecimal balance;

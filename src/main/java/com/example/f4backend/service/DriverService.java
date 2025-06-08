@@ -15,6 +15,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -24,7 +27,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class DriverService {
-        UserRepository userRepository;
         DriverRepository driverRepository;
         IdentifierCardRepository identifierCardRepository;
         VehicleDetailRepository vehicleDetailRepository;
@@ -62,7 +64,13 @@ public class DriverService {
                                 });
                 driver.setRoles(Set.of(driverRole));
 
-                return driverMapper.toDriverResponse(driverRepository.save(driver));
+                Wallet wallet = new Wallet();
+                wallet.setDriver(driver);
+                wallet.setBalance(BigDecimal.ZERO);
+                wallet.setLastUpdated(LocalDateTime.now());
+                driver.setWallet(wallet);
+
+             return driverMapper.toDriverResponse(driverRepository.save(driver));
         }
 
         @Transactional

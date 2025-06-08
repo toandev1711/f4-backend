@@ -36,4 +36,8 @@ public class Transaction {
     private String accountOwnerName;
 
     private LocalDateTime transactionTime;
+
+    @ManyToOne
+    @JoinColumn(name = "transaction_status_id")
+    private TransactionStatus status;
 }
