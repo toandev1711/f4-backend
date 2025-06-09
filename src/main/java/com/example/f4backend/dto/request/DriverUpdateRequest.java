@@ -21,4 +21,5 @@ public class DriverUpdateRequest {
     String address;
     String profilePicture;
     LocalDate dob;
+    Integer statusId;
 }

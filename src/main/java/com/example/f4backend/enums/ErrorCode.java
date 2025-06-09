@@ -37,7 +37,9 @@ public enum ErrorCode {
     TRANSACTION_TYPE_NOT_FOUND(1001, "Transaction type not found", HttpStatus.FOUND),
     TRANSACTION_STATUS_NOT_FOUND(1001, "Transaction status not found", HttpStatus.FOUND),
     INSUFFICIENT_BALANCE(1001, "Insufficient balance for withdrawal", HttpStatus.FOUND),
-    INVALID_AMOUNT(1001, "Transaction amount must be greater than 0" , HttpStatus.FOUND);
+    INVALID_AMOUNT(1001, "Transaction amount must be greater than 0" , HttpStatus.FOUND),
+    TRANSACTION_NOT_FOUND(1001, "Transaction not found", HttpStatus.FOUND),
+    TRANSACTION_SUCCESS(200, "Transaction successful", HttpStatus.OK),
     ;
 
     ErrorCode(int code, String message, HttpStatus httpStatus) {

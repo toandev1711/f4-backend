@@ -13,10 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -36,12 +33,30 @@ public class TransactionController {
                 .build();
     }
 
+    @PutMapping("/update-deposit/{transactionId}")
+    public ApiResponse<DepositResponse> updateDeposit(@PathVariable String transactionId) {
+        return ApiResponse.<DepositResponse>builder()
+                .code(ErrorCode.TRANSACTION_SUCCESS.getCode())
+                .result(transactionService.updateDeposit(transactionId))
+                .message(ErrorCode.TRANSACTION_SUCCESS.getMessage())
+                .build();
+    }
+
     @PostMapping("/withdraw")
     public ApiResponse<WithDrawResponse> withdraw(@Valid @RequestBody TransactionRequest request) {
         return ApiResponse.<WithDrawResponse>builder()
                 .code(ErrorCode.CREATE_DRIVER_SUCCESS.getCode())
                 .result(transactionService.withdraw(request))
                 .message(ErrorCode.CREATE_DRIVER_SUCCESS.getMessage())
+                .build();
+    }
+
+    @PutMapping("/update-withdraw/{transactionId}")
+    public ApiResponse<WithDrawResponse> updateWithdraw(@PathVariable String transactionId) {
+        return ApiResponse.<WithDrawResponse>builder()
+                .code(ErrorCode.TRANSACTION_SUCCESS.getCode())
+                .result(transactionService.updateWithDraw(transactionId))
+                .message(ErrorCode.TRANSACTION_SUCCESS.getMessage())
                 .build();
     }
 }

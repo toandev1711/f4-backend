@@ -87,4 +87,51 @@ public class TransactionService {
 
         return transactionMapper.toWithDrawResponse(transaction);
     }
+
+    @Transactional
+    public DepositResponse updateDeposit(String transactionId){
+        Transaction transaction = transactionRepository.findById(transactionId)
+                .orElseThrow(() -> new CustomException(ErrorCode.TRANSACTION_NOT_FOUND));
+
+        //kiem tra xem co phai la deposit khong
+        if(transaction.getTransactionType().getTransactionTypeId() != 1){
+            throw new CustomException(ErrorCode.TRANSACTION_TYPE_NOT_FOUND);
+        }
+
+        Wallet wallet = walletRepository.findById(transaction.getWallet().getWalletId())
+                .orElseThrow(() -> new CustomException(ErrorCode.WALLET_NOT_FOUND));
+
+        wallet.setBalance(wallet.getBalance().add(transaction.getAmount()));
+        wallet.setLastUpdated(LocalDateTime.now());
+        walletRepository.save(wallet);
+
+        transaction.setStatus(transactionStatusRepository.findByTransactionStatusId(3).
+                orElseThrow(() -> new CustomException(ErrorCode.TRANSACTION_STATUS_NOT_FOUND)));
+        transactionRepository.save(transaction);
+
+        return transactionMapper.toDepositResponse(transaction);
+    }
+
+    @Transactional
+    public WithDrawResponse updateWithDraw(String transactionId){
+        Transaction transaction = transactionRepository.findById(transactionId)
+                .orElseThrow(() -> new CustomException(ErrorCode.TRANSACTION_NOT_FOUND));
+
+        //kiem tra xem co phai la withdraw khong
+        if(transaction.getTransactionType().getTransactionTypeId() != 2){
+            throw new CustomException(ErrorCode.TRANSACTION_TYPE_NOT_FOUND);
+        }
+
+        Wallet wallet = walletRepository.findById(transaction.getWallet().getWalletId())
+                .orElseThrow(() -> new CustomException(ErrorCode.WALLET_NOT_FOUND));
+
+        wallet.setBalance(wallet.getBalance().subtract(transaction.getAmount()));
+        wallet.setLastUpdated(LocalDateTime.now());
+        walletRepository.save(wallet);
+
+        transaction.setStatus(transactionStatusRepository.findByTransactionStatusId(3).
+                orElseThrow(() -> new CustomException(ErrorCode.TRANSACTION_STATUS_NOT_FOUND)));
+        transactionRepository.save(transaction);
+        return transactionMapper.toWithDrawResponse(transaction);
+    }
 }
