@@ -43,7 +43,7 @@ public class LicenseCar {
     @Column(nullable = false)
     private Date createAt;
 
-    @ManyToOne
-    @JoinColumn(name = "status_id", nullable = false)
-    private DocumentStatus status;
+//    @ManyToOne
+//    @JoinColumn(name = "status_id", nullable = false)
+//    private DocumentStatus status;
 }

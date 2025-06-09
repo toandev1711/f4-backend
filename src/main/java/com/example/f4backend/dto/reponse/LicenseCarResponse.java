@@ -17,5 +17,4 @@ public class LicenseCarResponse {
     private String frontPhoto;
     private String backPhoto;
     private LocalDate createAt;
-    private String statusName;
 }

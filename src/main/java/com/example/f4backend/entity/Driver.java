@@ -41,7 +41,7 @@ public class Driver {
     @Column(name = "full_name", nullable = false, length = 255)
     private String fullName;
 
-    @Column(name = "portrait")
+    @Column(name = "portrait" ,nullable = false)
     private String portrait;
 
     @Column(name = "date_birth")
@@ -50,7 +50,7 @@ public class Driver {
     @Column(name = "address", length = 255)
     private String address;
 
-    @Column(name = "email")
+    @Column(name = "email" , nullable = false)
     private String email;
 
     @Column(name = "phone", nullable = false, length = 10)
@@ -69,4 +69,11 @@ public class Driver {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Role> roles = new HashSet<>();
+
+    @ManyToOne
+    @JoinColumn(name = "status_id", nullable = false)
+    private DocumentStatus status;
+
+    @Column(nullable = false)
+    private Double averageRating;
 }

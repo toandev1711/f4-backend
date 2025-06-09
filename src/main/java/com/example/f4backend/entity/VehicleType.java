@@ -17,6 +17,4 @@ public class VehicleType {
     @Column(nullable = false)
     private String vehicleTypeName;
 
-    @Column(nullable = false)
-    private Timestamp createAt;
 }
