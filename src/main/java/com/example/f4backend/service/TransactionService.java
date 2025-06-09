@@ -1,0 +1,90 @@
+package com.example.f4backend.service;
+
+import com.example.f4backend.dto.reponse.DepositResponse;
+import com.example.f4backend.dto.reponse.WithDrawResponse;
+import com.example.f4backend.dto.request.TransactionRequest;
+import com.example.f4backend.entity.Transaction;
+import com.example.f4backend.entity.TransactionStatus;
+import com.example.f4backend.entity.TransactionType;
+import com.example.f4backend.entity.Wallet;
+import com.example.f4backend.enums.ErrorCode;
+import com.example.f4backend.exception.CustomException;
+import com.example.f4backend.mapper.TransactionMapper;
+import com.example.f4backend.repository.TransactionRepository;
+import com.example.f4backend.repository.TransactionStatusRepository;
+import com.example.f4backend.repository.TransactionTypeRepository;
+import com.example.f4backend.repository.WalletRepository;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+@Slf4j
+@Service
+@RequiredArgsConstructor
+public class TransactionService {
+    private final  WalletRepository walletRepository;
+    private final TransactionRepository transactionRepository;
+    private final TransactionTypeRepository transactionTypeRepository;
+    private final TransactionStatusRepository transactionStatusRepository;
+    private final TransactionMapper transactionMapper;
+
+    @Transactional
+    public DepositResponse deposit(TransactionRequest request) {
+        if (request.getAmount() == null || request.getAmount().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new CustomException(ErrorCode.INVALID_AMOUNT);
+        }
+
+        Wallet wallet = walletRepository.findByDriverDriverId(request.getDriverId())
+                .orElseThrow(() -> new CustomException(ErrorCode.WALLET_NOT_FOUND));
+
+        TransactionType transactionType = transactionTypeRepository.findByTransactionTypeId(1) //DEPOSIT
+                .orElseThrow(() -> new CustomException(ErrorCode.TRANSACTION_TYPE_NOT_FOUND));
+
+        TransactionStatus transactionStatus = transactionStatusRepository.findByTransactionStatusId(1)
+                .orElseThrow(() -> new CustomException(ErrorCode.TRANSACTION_STATUS_NOT_FOUND));
+
+        Transaction transaction = transactionMapper.toTransaction(request, wallet, transactionType, transactionStatus);
+
+        wallet.setBalance(wallet.getBalance().add(request.getAmount()));
+        wallet.setLastUpdated(LocalDateTime.now());
+        walletRepository.save(wallet);
+
+        transaction = transactionRepository.save(transaction);
+
+        return transactionMapper.toDepositResponse(transaction);
+    }
+
+    @Transactional
+    public WithDrawResponse withdraw(TransactionRequest request) {
+        if (request.getAmount() == null || request.getAmount().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new CustomException(ErrorCode.INVALID_AMOUNT);
+        }
+
+        Wallet wallet = walletRepository.findByDriverDriverId(request.getDriverId())
+                .orElseThrow(() -> new CustomException(ErrorCode.WALLET_NOT_FOUND));
+
+        if (wallet.getBalance().compareTo(request.getAmount()) < 0) {
+            throw new CustomException(ErrorCode.INSUFFICIENT_BALANCE);
+        }
+
+        TransactionType transactionType = transactionTypeRepository.findByTransactionTypeId(2) //WITHDRAW
+                .orElseThrow(() -> new CustomException(ErrorCode.TRANSACTION_TYPE_NOT_FOUND));
+
+        TransactionStatus transactionStatus = transactionStatusRepository.findByTransactionStatusId(1)
+                .orElseThrow(() -> new CustomException(ErrorCode.TRANSACTION_STATUS_NOT_FOUND));
+
+        Transaction transaction = transactionMapper.toTransaction(request, wallet, transactionType, transactionStatus);
+
+        wallet.setBalance(wallet.getBalance().subtract(request.getAmount()));
+        wallet.setLastUpdated(LocalDateTime.now());
+        walletRepository.save(wallet);
+
+        transaction = transactionRepository.save(transaction);
+
+        return transactionMapper.toWithDrawResponse(transaction);
+    }
+}
