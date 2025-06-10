@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.sql.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -28,9 +29,12 @@ public class Driver {
     @JoinColumn(name = "driver_status_id", nullable = false)
     private DriverStatus driverStatus;
 
-    //
+
     @OneToOne(mappedBy = "driver", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Wallet wallet;
+
+    @OneToMany(mappedBy = "driver", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Bank> banks;
 
     @Column(name = "gender")
     private Boolean gender;

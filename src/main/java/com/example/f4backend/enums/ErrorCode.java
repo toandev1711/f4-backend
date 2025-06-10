@@ -40,6 +40,9 @@ public enum ErrorCode {
     INVALID_AMOUNT(1001, "Transaction amount must be greater than 0" , HttpStatus.FOUND),
     TRANSACTION_NOT_FOUND(1001, "Transaction not found", HttpStatus.FOUND),
     TRANSACTION_SUCCESS(200, "Transaction successful", HttpStatus.OK),
+    CREATE_BANK_SUCCESS(200, "Bank created successfully", HttpStatus.OK),
+    BANK_LIMIT_EXCEEDED(1001, "Bank limit exceeded", HttpStatus.FOUND),
+    BANK_ALREADY_EXISTS(1001, "Bank with same info already exists for this driver", HttpStatus.FOUND),
     ;
 
     ErrorCode(int code, String message, HttpStatus httpStatus) {
