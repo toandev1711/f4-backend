@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.ErrorManager;
 
 @Service
 @Slf4j
@@ -42,11 +41,9 @@ public class BankService {
                         bank.getBankAccountNumber().equals(request.getBankAccountNumber()) &&
                         bank.getAccountOwnerName().equalsIgnoreCase(request.getAccountOwnerName())
         );
-
         if (isDuplicate) {
             throw new CustomException(ErrorCode.BANK_ALREADY_EXISTS);
         }
-
         if (existingBanks.size() >= 3) {
             throw new CustomException(ErrorCode.BANK_LIMIT_EXCEEDED);
         }
@@ -55,5 +52,22 @@ public class BankService {
         bank.setDriver(driver);
 
         return bankMapper.toBankResponse(bankRepository.save(bank));
+    }
+
+    public BankResponse updateBank(String bankId, BankRequest request) {
+        Optional<Bank> optionalBank = bankRepository.findById(bankId);
+
+        if (optionalBank.isEmpty()) {
+            throw new CustomException(ErrorCode.BANK_NOT_FOUND);
+        }
+
+        Bank bank = bankMapper.toUpdateBank(request, optionalBank.get().getDriver());
+        bank.setBankId(bankId);
+
+        return bankMapper.toBankResponse(bankRepository.save(bank));
+    }
+
+    public void deleteBank(String bankId) {
+        bankRepository.deleteById(bankId);
     }
 }

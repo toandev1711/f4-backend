@@ -43,6 +43,9 @@ public enum ErrorCode {
     CREATE_BANK_SUCCESS(200, "Bank created successfully", HttpStatus.OK),
     BANK_LIMIT_EXCEEDED(1001, "Bank limit exceeded", HttpStatus.FOUND),
     BANK_ALREADY_EXISTS(1001, "Bank with same info already exists for this driver", HttpStatus.FOUND),
+    BANK_NOT_FOUND(1001, "Bank not found", HttpStatus.FOUND),
+    BANK_UPDATE_SUCCESS(200, "Bank updated successfully", HttpStatus.OK),
+    BANK_DELETE_SUCCESS(200, "Bank deleted successfully", HttpStatus.OK),
     ;
 
     ErrorCode(int code, String message, HttpStatus httpStatus) {

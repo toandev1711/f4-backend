@@ -16,4 +16,10 @@ public interface BankMapper {
 
     @Mapping(target = "driverId", source = "driver.driverId")
     BankResponse toBankResponse(Bank bank);
+
+    //update
+//    @Mapping(target = "bankId", source = "bankId")
+    @Mapping(target = "createAt", expression = "java(java.time.LocalDateTime.now())")
+    @Mapping(source = "driver", target = "driver")
+    Bank toUpdateBank(BankRequest bankRequest , Driver driver);
 }

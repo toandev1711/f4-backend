@@ -2,9 +2,7 @@ package com.example.f4backend.controller;
 
 import com.example.f4backend.dto.reponse.ApiResponse;
 import com.example.f4backend.dto.reponse.BankResponse;
-import com.example.f4backend.dto.reponse.OrderResponse;
 import com.example.f4backend.dto.request.BankRequest;
-import com.example.f4backend.dto.request.OrderRequest;
 import com.example.f4backend.enums.ErrorCode;
 import com.example.f4backend.service.BankService;
 import jakarta.validation.Valid;
@@ -29,6 +27,26 @@ public class BankController {
                 .code(ErrorCode.CREATE_BANK_SUCCESS.getCode())
                 .result(bankService.createBank(request , driverId))
                 .message(ErrorCode.CREATE_BANK_SUCCESS.getMessage())
+                .build();
+    }
+
+    @PutMapping("/update/{bankId}")
+    public ApiResponse<BankResponse> updateOrder(@Valid @RequestBody BankRequest request , @PathVariable String bankId){
+        return ApiResponse.<BankResponse>
+                        builder()
+                .code(ErrorCode.BANK_UPDATE_SUCCESS.getCode())
+                .result(bankService.updateBank(bankId, request))
+                .message(ErrorCode.BANK_UPDATE_SUCCESS.getMessage())
+                .build();
+    }
+
+    @DeleteMapping("/delete/{bankId}")
+    public ApiResponse<BankResponse> deleteOrder(@PathVariable String bankId){
+        bankService.deleteBank(bankId);
+        return ApiResponse.<BankResponse>
+                        builder()
+                .code(ErrorCode.BANK_DELETE_SUCCESS.getCode())
+                .message(ErrorCode.BANK_DELETE_SUCCESS.getMessage())
                 .build();
     }
 }
