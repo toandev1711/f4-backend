@@ -54,6 +54,19 @@ public class BankService {
         return bankMapper.toBankResponse(bankRepository.save(bank));
     }
 
+    public List<BankResponse> getBanksByDriverId(String driverId) {
+        List<Bank> banks = bankRepository.findAllByDriver_DriverId(driverId);
+        return banks.stream().map(bankMapper::toBankResponse).toList();
+    }
+
+    public BankResponse getBankById(String bankId) {
+        Optional<Bank> optionalBank = bankRepository.findById(bankId);
+        if (optionalBank.isEmpty()) {
+            throw new CustomException(ErrorCode.BANK_NOT_FOUND);
+        }
+        return bankMapper.toBankResponse(optionalBank.get());
+    }
+
     public BankResponse updateBank(String bankId, BankRequest request) {
         Optional<Bank> optionalBank = bankRepository.findById(bankId);
 
