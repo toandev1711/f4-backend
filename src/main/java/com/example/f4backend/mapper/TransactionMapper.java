@@ -30,7 +30,7 @@ public interface TransactionMapper {
     @Mapping(target = "amount", source = "amount")
     @Mapping(target = "type", source = "transactionType.typeName")
     @Mapping(target = "status", source = "status.statusName")
-    @Mapping(target = "timestamp", source = "transactionTime")
+    @Mapping(target = "transactionTime", source = "transactionTime")
     DepositResponse toDepositResponse(Transaction transaction);
 
     @Mapping(target = "transactionId", source = "transactionId")
@@ -40,6 +40,6 @@ public interface TransactionMapper {
     @Mapping(target = "bankAccountNumber", source = "bankAccountNumber")
     @Mapping(target = "accountOwnerName", source = "accountOwnerName")
     @Mapping(target = "statusName", source = "status.statusName")
-    @Mapping(target = "timestamp", source = "transactionTime")
+    @Mapping(target = "transactionTime", source = "transactionTime")
     WithDrawResponse toWithDrawResponse(Transaction transaction);
 }

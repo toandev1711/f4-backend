@@ -22,6 +22,8 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -133,5 +135,25 @@ public class TransactionService {
                 orElseThrow(() -> new CustomException(ErrorCode.TRANSACTION_STATUS_NOT_FOUND)));
         transactionRepository.save(transaction);
         return transactionMapper.toWithDrawResponse(transaction);
+    }
+
+    public List<WithDrawResponse> getListTransaction(String driverId) {
+        Wallet wallet = walletRepository.findByDriverDriverId(driverId)
+                .orElseThrow(() -> new CustomException(ErrorCode.WALLET_NOT_FOUND));
+
+        // lây ra danh sách 10 giao dịch gần nhất
+        List<Transaction> transactions = transactionRepository.findTop10ByWalletOrderByTransactionTimeDesc(wallet);
+        return transactions.stream().map(transactionMapper::toWithDrawResponse).toList();
+    }
+
+    public List<WithDrawResponse> getListByTransactionType(String driverId , Integer transactionStatusId) {
+        Wallet wallet = walletRepository.findByDriverDriverId(driverId)
+                .orElseThrow(() -> new CustomException(ErrorCode.WALLET_NOT_FOUND));
+
+        TransactionType transactionType = transactionTypeRepository.findByTransactionTypeId(transactionStatusId)
+                .orElseThrow(() -> new CustomException(ErrorCode.TRANSACTION_TYPE_NOT_FOUND));
+        List<Transaction> transactions = transactionRepository.findTop10ByWalletAndTransactionTypeOrderByTransactionTimeDesc(wallet, transactionType);
+
+        return transactions.stream().map(transactionMapper::toWithDrawResponse).toList();
     }
 }

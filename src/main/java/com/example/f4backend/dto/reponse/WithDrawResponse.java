@@ -14,5 +14,5 @@ public class WithDrawResponse {
     private String bankAccountNumber;
     private String accountOwnerName;
     private String statusName;
-    private LocalDateTime timestamp;
+    private LocalDateTime transactionTime;
 }

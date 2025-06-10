@@ -15,6 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping("/transactions")
@@ -23,6 +25,24 @@ import org.springframework.web.bind.annotation.*;
 public class TransactionController {
 
     TransactionService transactionService;
+
+    @GetMapping("/getList/{driverId}")
+    public ApiResponse<List<WithDrawResponse>> getListTransaction(@PathVariable String driverId) {
+        return ApiResponse.<List<WithDrawResponse>>builder()
+                .code(ErrorCode.TRANSACTION_SUCCESS.getCode())
+                .result(transactionService.getListTransaction(driverId))
+                .message(ErrorCode.TRANSACTION_SUCCESS.getMessage())
+                .build();
+    }
+
+    @GetMapping("/getList/{driverId}/{transactionStatusId}")
+    public ApiResponse<List<WithDrawResponse>> getListByTransactionType(@PathVariable String driverId , @PathVariable Integer transactionStatusId) {
+        return ApiResponse.<List<WithDrawResponse>>builder()
+                .code(ErrorCode.TRANSACTION_SUCCESS.getCode())
+                .result(transactionService.getListByTransactionType(driverId , transactionStatusId))
+                .message(ErrorCode.TRANSACTION_SUCCESS.getMessage())
+                .build();
+    }
 
     @PostMapping("/deposit")
     public ApiResponse<DepositResponse> deposit(@Valid @RequestBody TransactionRequest request) {
