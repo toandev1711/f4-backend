@@ -15,6 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -206,6 +208,90 @@ public class DriverService {
                 return driverMapper.toVehicleDetailResponse(updatedVehicleDetail);
         }
 
+//        @Transactional
+//        public void checkStatusDocument(String driverId) {
+//                Driver driver = driverRepository.findById(driverId)
+//                        .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_EXISTED));
+//                DocumentStatus status= documentStatusRepository.findById(3)
+//                        .orElseThrow(() -> new CustomException(ErrorCode.STATUS_NOT_FOUND));
+//                //kiem tra status cccd
+//                boolean isIdentifierApproved = identifierCardRepository.findByDriverDriverId(driverId)
+//                        .map(card -> card.getStatus().getStatusID()== 3)
+//                        .orElse(false);
+//
+//                // kiem tra license
+//                List<LicenseCar> licenses = licenseCarRepository.findByDriverDriverId(driverId);
+//                boolean areAllLicensesApproved = !licenses.isEmpty() &&
+//                        licenses.stream().allMatch(l -> l.getStatus().getStatusID() == 3);
+//
+//                // kiem tra vehicle
+//                List<VehicleDetail> vehicles = vehicleDetailRepository.findByDriverDriverId(driverId);
+//                boolean areAllVehiclesApproved = !vehicles.isEmpty() &&
+//                        vehicles.stream().allMatch(v -> v.getStatus().getStatusID() == 3);
+//
+//                // ca 3 duoc duyet thi cap nhat
+//                if (isIdentifierApproved && areAllLicensesApproved && areAllVehiclesApproved) {
+//                        driver.setDriverStatus(status);
+//                        driverRepository.save(driver);
+//                }
+//        }
+
+        public IdentifierCardResponse updateIdentifierCardStatus(String driverId, String statusId) {
+
+                IdentifierCard card = identifierCardRepository.findByDriverDriverId(driverId)
+                        .orElseThrow(() -> new CustomException(ErrorCode.DOCUMENT_NOT_FOUND));
+
+                DocumentStatus documentStatus = documentStatusRepository.findById(Integer.parseInt(statusId))
+                        .orElseThrow(() -> new CustomException(ErrorCode.STATUS_NOT_FOUND));
+
+                card.setStatus(documentStatus);
+                IdentifierCard updatedCard = identifierCardRepository.save(card);
+
+                return driverMapper.toIdentifierCardResponse(updatedCard);
+        }
+        public LicenseCarResponse updateLicenseCardStatus(String licenseId, String driverId, String statusId) {
+
+                LicenseCar license = licenseCarRepository
+                        .findByLicenseCarIdAndDriverDriverId(licenseId, driverId)
+                        .orElseThrow(() -> new CustomException(ErrorCode.DOCUMENT_NOT_FOUND));
+
+                DocumentStatus documentStatus = documentStatusRepository.findById(Integer.parseInt(statusId))
+                        .orElseThrow(() -> new CustomException(ErrorCode.STATUS_NOT_FOUND));
+
+                license.setStatus(documentStatus);
+                LicenseCar updatedLicenseCar = licenseCarRepository.save(license);
+                return driverMapper.toLicenseCarResponse(updatedLicenseCar);
+        }
+        public VehicleDetailResponse updateVehilceCardStatus(String vehicleId, String driverId, String statusId) {
+
+                VehicleDetail vehicle = vehicleDetailRepository
+                        .findByVehicleIdAndDriverDriverId(vehicleId, driverId)
+                        .orElseThrow(() -> new CustomException(ErrorCode.DOCUMENT_NOT_FOUND));
+
+                DocumentStatus documentStatus = documentStatusRepository.findById(Integer.parseInt(statusId))
+                        .orElseThrow(() -> new CustomException(ErrorCode.STATUS_NOT_FOUND));
+
+                vehicle.setStatus(documentStatus);
+                VehicleDetail updateVehicle = vehicleDetailRepository.save(vehicle);
+                return driverMapper.toVehicleDetailResponse(updateVehicle);
+        }
+
+        public DriverResponse blockDriver( String driverId, String isBlocked) {
+                Driver driver = driverRepository.findById(driverId)
+                        .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_EXISTED));
+                int isblocked = Integer.parseInt(isBlocked);
+                if(isblocked == 1) {
+                        driver.setIsLocked(true);
+                }else {
+                        driver.setIsLocked(false);
+                }
+
+                Driver lockDriver = driverRepository.save(driver);
+                return driverMapper.toDriverResponse(lockDriver);
+        }
+
+
+
         public IdentifierCardResponse getIdentifierCard(String driverId) {
                 IdentifierCard identifierCard = identifierCardRepository.findByDriverDriverId(driverId)
                                 .orElseThrow(() -> new CustomException(ErrorCode.DOCUMENT_NOT_FOUND));
@@ -269,4 +355,23 @@ public class DriverService {
                                 .map(driverMapper::toDriverTypeResponse)
                                 .collect(Collectors.toList());
         }
+
+        public Page<DriverResponse> getDrivers(String searchTerm, String status, int page, int size) {
+                PageRequest pageRequest = PageRequest.of(page - 1, size);
+
+                int statusId;
+                if (status == null || status.equalsIgnoreCase("All")) {
+                        statusId = -1;
+                } else {
+                        try {
+                                statusId = Integer.parseInt(status);
+                        } catch (NumberFormatException e) {
+                                statusId = -1;
+                        }
+                }
+                Page<Driver> driverPage = driverRepository.findBySearchTermAndStatus(searchTerm, statusId, pageRequest);
+                return driverPage.map(driverMapper::toDriverResponse);
+        }
+
+
 }
