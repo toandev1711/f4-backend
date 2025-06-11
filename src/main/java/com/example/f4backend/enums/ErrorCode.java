@@ -47,6 +47,7 @@ public enum ErrorCode {
     BANK_UPDATE_SUCCESS(200, "Bank updated successfully", HttpStatus.OK),
     BANK_DELETE_SUCCESS(200, "Bank deleted successfully", HttpStatus.OK),
     BANK_GET_SUCCESS(200, "Bank get successfully", HttpStatus.OK),
+    WALLET_GET_SUCCESS(200, "Wallet get successfully", HttpStatus.OK),
     ;
 
     ErrorCode(int code, String message, HttpStatus httpStatus) {
