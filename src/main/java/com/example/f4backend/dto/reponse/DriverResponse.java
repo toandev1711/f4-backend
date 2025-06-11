@@ -17,7 +17,7 @@ public class DriverResponse {
     private String address;
     private String email;
     private String phone;
-    private String statusName;
+//    private String statusName;
     private Double averageRating;
     private Date createDate;
     private Boolean isLocked;

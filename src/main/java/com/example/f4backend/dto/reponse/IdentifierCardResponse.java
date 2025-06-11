@@ -12,5 +12,7 @@ public class IdentifierCardResponse {
     private LocalDate issueDate;
     private String frontPhoto;
     private String backPhoto;
+    private String statusName;
     private LocalDate createAt;
+
 }

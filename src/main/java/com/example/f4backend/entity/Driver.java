@@ -29,7 +29,6 @@ public class Driver {
     @JoinColumn(name = "driver_status_id", nullable = false)
     private DriverStatus driverStatus;
 
-
     @OneToOne(mappedBy = "driver", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Wallet wallet;
 
@@ -73,10 +72,6 @@ public class Driver {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Role> roles = new HashSet<>();
-
-    @ManyToOne
-    @JoinColumn(name = "status_id", nullable = false)
-    private DocumentStatus status;
 
     @Column(nullable = false)
     private Double averageRating;

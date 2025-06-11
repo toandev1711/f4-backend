@@ -15,6 +15,7 @@ public class VehicleDetailResponse {
     private String frontPhoto;
     private String backPhoto;
     private LocalDate issueDate;
-    private LocalDate createAt;
+    private String statusName;
     private String vehicleTypeName;
+    private LocalDate createAt;
 }
