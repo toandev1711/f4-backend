@@ -2,6 +2,7 @@ package com.example.f4backend.controller;
 
 import com.example.f4backend.dto.reponse.ApiResponse;
 import com.example.f4backend.dto.reponse.UserResponse;
+import com.example.f4backend.dto.reponse.WithDrawResponse;
 import com.example.f4backend.dto.request.UserCreationRequest;
 import com.example.f4backend.dto.request.UserUpdateRequest;
 import com.example.f4backend.entity.User;
@@ -15,6 +16,8 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -50,4 +53,22 @@ public class UserController {
                 .message("Your information")
                 .build();
     }
+
+    @GetMapping("/getList")
+    public ApiResponse<List<UserResponse>> getListUser() {
+        return ApiResponse.<List<UserResponse>>builder()
+                .code(ErrorCode.GET_USER_SUCCESS.getCode())
+                .result(userService.getListUser())
+                .message(ErrorCode.GET_USER_SUCCESS.getMessage())
+                .build();
+    }
+    @PutMapping("/lock/{userId}")
+    public ApiResponse<UserResponse> updateLockStatus(@PathVariable String userId) {
+        return ApiResponse.<UserResponse>builder()
+                .code(1000)
+                .result(userService.updateLockStatusUser(userId))
+                .message("User account locked or unlocked successfully")
+                .build();
+    }
+
 }

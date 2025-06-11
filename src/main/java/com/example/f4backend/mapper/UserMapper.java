@@ -12,5 +12,7 @@ public interface UserMapper {
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateUser(@MappingTarget User user, UserUpdateRequest request);
     User toUser(UserCreationRequest request);
+
+    @Mapping(source = "locked", target = "isLocked")
     UserResponse toUserResponse(User user);
 }
