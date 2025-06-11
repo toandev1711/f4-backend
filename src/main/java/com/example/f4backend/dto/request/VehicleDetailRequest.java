@@ -28,7 +28,7 @@ public class VehicleDetailRequest {
 
     private Date issueDate;
 
-    private String statusId;
+    private Integer statusId;
 
     private Integer vehicleTypeId;
 

@@ -11,5 +11,5 @@ public class DepositResponse {
     private BigDecimal amount;
     private String type; // "DEPOSIT"
     private String status;
-    private LocalDateTime timestamp;
+    private LocalDateTime transactionTime;
 }
