@@ -37,7 +37,7 @@ public class LicenseCarRequest {
     @NotBlank(message = "backPhoto không được để trống")
     private String backPhoto;
 
-    private String statusId;
+    private Integer statusId;
 
     private Date CreateAt;
 }

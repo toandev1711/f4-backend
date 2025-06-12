@@ -33,7 +33,22 @@ public enum ErrorCode {
     DOCUMENT_NOT_FOUND(1001, "No Document", HttpStatus.FOUND),
     STATUS_NOT_FOUND(1001, "No Status Document", HttpStatus.FOUND),
     UPDATE_DRIVER_SUCCESS(200, "Update driver successful", HttpStatus.OK),
-
+    UPDATE_DOCUMENT_SUCCESS(200, "Update document successful", HttpStatus.OK),
+    WALLET_NOT_FOUND(1001, "Wallet not found", HttpStatus.FOUND),
+    TRANSACTION_TYPE_NOT_FOUND(1001, "Transaction type not found", HttpStatus.FOUND),
+    TRANSACTION_STATUS_NOT_FOUND(1001, "Transaction status not found", HttpStatus.FOUND),
+    INSUFFICIENT_BALANCE(1001, "Insufficient balance for withdrawal", HttpStatus.FOUND),
+    INVALID_AMOUNT(1001, "Transaction amount must be greater than 0", HttpStatus.FOUND),
+    TRANSACTION_NOT_FOUND(1001, "Transaction not found", HttpStatus.FOUND),
+    TRANSACTION_SUCCESS(200, "Transaction successful", HttpStatus.OK),
+    CREATE_BANK_SUCCESS(200, "Bank created successfully", HttpStatus.OK),
+    BANK_LIMIT_EXCEEDED(1001, "Bank limit exceeded", HttpStatus.FOUND),
+    BANK_ALREADY_EXISTS(1001, "Bank with same info already exists for this driver", HttpStatus.FOUND),
+    BANK_NOT_FOUND(1001, "Bank not found", HttpStatus.FOUND),
+    BANK_UPDATE_SUCCESS(200, "Bank updated successfully", HttpStatus.OK),
+    BANK_DELETE_SUCCESS(200, "Bank deleted successfully", HttpStatus.OK),
+    BANK_GET_SUCCESS(200, "Bank get successfully", HttpStatus.OK),
+    GET_USER_SUCCESS(200 , "Get user successfully", HttpStatus.OK),
     ;
 
     ErrorCode(int code, String message, HttpStatus httpStatus) {

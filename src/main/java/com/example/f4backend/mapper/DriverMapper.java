@@ -39,6 +39,7 @@ public interface DriverMapper {
     // Entity to Response
     @Mapping(target = "driverTypeName", source = "driverType.driverTypeName")
     @Mapping(target = "driverStatusName", source = "driverStatus.driverStatusName")
+    @Mapping(source = "averageRating", target = "averageRating")
     DriverResponse toDriverResponse(Driver driver);
 
     @Mapping(target = "driverId", source = "driver.driverId")
@@ -50,8 +51,8 @@ public interface DriverMapper {
     LicenseCarResponse toLicenseCarResponse(LicenseCar licenseCar);
 
     @Mapping(target = "driverId", source = "driver.driverId")
-    @Mapping(target = "statusName", source = "status.statusName")
     @Mapping(target = "vehicleTypeName", source = "vehicleType.vehicleTypeName")
+    @Mapping(target = "statusName", source = "status.statusName")
     VehicleDetailResponse toVehicleDetailResponse(VehicleDetail vehicleDetail);
 
     @Mapping(target = "vehicleTypeId", source = "vehicleTypeId")

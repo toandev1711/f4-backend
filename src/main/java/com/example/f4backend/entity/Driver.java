@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.sql.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -28,6 +29,12 @@ public class Driver {
     @JoinColumn(name = "driver_status_id", nullable = false)
     private DriverStatus driverStatus;
 
+    @OneToOne(mappedBy = "driver", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Wallet wallet;
+
+    @OneToMany(mappedBy = "driver", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Bank> banks;
+
     @Column(name = "gender")
     private Boolean gender;
 
@@ -37,7 +44,7 @@ public class Driver {
     @Column(name = "full_name", nullable = false, length = 255)
     private String fullName;
 
-    @Column(name = "portrait")
+    @Column(name = "portrait" ,nullable = false)
     private String portrait;
 
     @Column(name = "date_birth")
@@ -46,7 +53,7 @@ public class Driver {
     @Column(name = "address", length = 255)
     private String address;
 
-    @Column(name = "email")
+    @Column(name = "email" , nullable = false)
     private String email;
 
     @Column(name = "phone", nullable = false, length = 10)
@@ -65,4 +72,7 @@ public class Driver {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Role> roles = new HashSet<>();
+
+    @Column(nullable = false)
+    private Double averageRating;
 }

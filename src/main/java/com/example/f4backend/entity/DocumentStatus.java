@@ -15,6 +15,4 @@ public class DocumentStatus {
 
     @Column(nullable = false)
     private String statusName;
-
-    private Timestamp createDate;
 }
