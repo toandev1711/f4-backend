@@ -1,4 +1,5 @@
 package com.example.f4backend.configuration;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.converter.DefaultContentTypeResolver;
@@ -11,7 +12,6 @@ import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
 import java.util.List;
-
 
 @Configuration
 @EnableWebSocketMessageBroker
@@ -26,8 +26,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws")
-                .setAllowedOrigins("http://localhost:5500")
-                .withSockJS();
+                .setAllowedOrigins("http://192.168.1.46:8081", "ws://192.168.1.46:8081")
+                .withSockJS(); // Enable SockJS fallback
     }
 
     @Override

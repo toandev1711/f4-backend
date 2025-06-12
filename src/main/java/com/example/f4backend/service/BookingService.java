@@ -1,13 +1,17 @@
 package com.example.f4backend.service;
-
 import com.example.f4backend.dto.request.BookingRequest;
-import com.example.f4backend.dto.request.BookingRequestForDriver;
 import com.example.f4backend.entity.*;
 import com.example.f4backend.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.geo.*;
+import org.springframework.data.redis.connection.RedisGeoCommands;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+
 
 @Service
 @RequiredArgsConstructor
@@ -18,6 +22,9 @@ public class BookingService {
     private final BookingRepository bookingRepository;
     private final BookingStatusRepository bookingStatusRepository;
     private final DriverRepository driverRepository;
+    private final CoordinatesRepository coordinatesRepository;
+    private final RedisTemplate<String, String> redisTemplate;
+    private final static String GEO_KEY = "driver_locations";
     public String createBooking(BookingRequest dto) {
         User user = userRepository.findById(dto.getUserId()).orElseThrow();
         VehicleType vehicleType = vehicleTypeRepository.findById(dto.getVehicleTypeId()).orElseThrow();
@@ -41,21 +48,29 @@ public class BookingService {
                     newStatus.setStatusName("PENDING");
                     return bookingStatusRepository.save(newStatus);
                 });
+
+
+        Coordinates coordinates = Coordinates.builder()
+                .bookingDetail(detail)
+                .dropoffLatitude(dto.getDropoffLatitude())
+                .dropoffLongitude(dto.getDropoffLongitude())
+                .pickupLatitude(dto.getPickupLatitude())
+                .pickupLongitude(dto.getPickupLongitude())
+                .build();
         booking.setBookingStatus(status);
         Booking saved = bookingRepository.save(booking);
+        coordinatesRepository.save(coordinates);
         return saved.getBookingId();
     }
 
     public boolean acceptBooking(String bookingId, String driverId) {
         Optional<Booking> optionalBooking = bookingRepository.findById(bookingId);
         if (optionalBooking.isEmpty()) return false;
-
         Booking booking = optionalBooking.get();
         BookingStatus currentStatus = booking.getBookingStatus();
         if (currentStatus == null || !"PENDING".equalsIgnoreCase(currentStatus.getStatusName())) {
             return false;
         }
-
         BookingStatus acceptedStatus = bookingStatusRepository.findByStatusNameIgnoreCase("ACCEPTED")
                 .orElseGet(() -> {
                     BookingStatus newStatus = new BookingStatus();
@@ -69,8 +84,28 @@ public class BookingService {
         booking.setDriver(optionalDriver.get());
         booking.setBookingStatus(acceptedStatus);
         bookingRepository.save(booking);
-
         return true;
     }
+
+    public boolean completeBooking(String bookingId, String driverId) {
+        Optional<Booking> optionalBooking = bookingRepository.findById(bookingId);
+        if (optionalBooking.isEmpty()) return false;
+        Booking booking = optionalBooking.get();
+        BookingStatus status = bookingStatusRepository
+                .findByStatusNameIgnoreCase("COMPLETED")
+                .orElseGet(() -> {
+                    BookingStatus newStatus = new BookingStatus();
+                    newStatus.setStatusName("COMPLETED");
+                    return bookingStatusRepository.save(newStatus);
+                });
+
+        if (!booking.getDriver().getDriverId().equals(driverId)) return false;
+
+        booking.setBookingStatus(status);
+        bookingRepository.save(booking);
+        return true;
+    }
+
+
 
 }

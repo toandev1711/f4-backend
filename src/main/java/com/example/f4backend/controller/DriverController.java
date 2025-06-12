@@ -158,7 +158,6 @@ public class DriverController {
                                 .message("Vehicle detail information")
                                 .build();
         }
-
         @GetMapping("/info")
         public ApiResponse<DriverResponse> myInfo() {
                 return ApiResponse.<DriverResponse>builder()
