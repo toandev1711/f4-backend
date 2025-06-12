@@ -164,7 +164,7 @@ public class DriverController {
         }
 
         // get driver info
-        @GetMapping("/driverinfo")
+        @GetMapping("/info")
         public ApiResponse<DriverResponse> myInfo() {
                 return ApiResponse.<DriverResponse>builder()
                                 .result(driverService.driverInfo())

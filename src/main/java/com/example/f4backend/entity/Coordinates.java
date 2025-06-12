@@ -1,6 +1,7 @@
 package com.example.f4backend.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import java.math.BigDecimal;
@@ -9,6 +10,7 @@ import java.math.BigDecimal;
 @Table(name = "coordinates")
 @Getter
 @Setter
+@Builder
 public class Coordinates {
 
     @Id
@@ -17,8 +19,8 @@ public class Coordinates {
     private String coordinateId;
 
     @OneToOne
-    @JoinColumn(name = "delivery_detail_id", nullable = false, unique = true)
-    private DeliveryDetail deliveryDetail;
+    @JoinColumn(name = "booking_detail_id", nullable = false, unique = true)
+    private BookingDetail bookingDetail;
 
     @Column(name = "pickup_latitude", nullable = false ,precision = 9, scale = 6)
     private BigDecimal pickupLatitude;
