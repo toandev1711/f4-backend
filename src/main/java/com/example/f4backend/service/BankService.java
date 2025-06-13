@@ -74,6 +74,18 @@ public class BankService {
             throw new CustomException(ErrorCode.BANK_NOT_FOUND);
         }
 
+        List<Bank> existingBanks = bankRepository.findAllByDriver_DriverId(optionalBank.get().getDriver().getDriverId());
+
+        boolean isDuplicate = existingBanks.stream().anyMatch(bank ->
+                bank.getBankName().equalsIgnoreCase(request.getBankName()) &&
+                        bank.getBankAccountNumber().equals(request.getBankAccountNumber()) &&
+                        bank.getAccountOwnerName().equalsIgnoreCase(request.getAccountOwnerName())
+        );
+
+        if (isDuplicate) {
+            throw new CustomException(ErrorCode.BANK_ALREADY_EXISTS);
+        }
+
         Bank bank = bankMapper.toUpdateBank(request, optionalBank.get().getDriver());
         bank.setBankId(bankId);
 
