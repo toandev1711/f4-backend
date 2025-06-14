@@ -1,10 +1,13 @@
 package com.example.f4backend.service;
 
 import com.example.f4backend.dto.reponse.UserResponse;
+import com.example.f4backend.dto.reponse.WithDrawResponse;
 import com.example.f4backend.dto.request.UserCreationRequest;
 import com.example.f4backend.dto.request.UserUpdateRequest;
 import com.example.f4backend.entity.Role;
+import com.example.f4backend.entity.Transaction;
 import com.example.f4backend.entity.User;
+import com.example.f4backend.entity.Wallet;
 import com.example.f4backend.enums.ErrorCode;
 import com.example.f4backend.exception.CustomException;
 import com.example.f4backend.mapper.UserMapper;
@@ -23,6 +26,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 @Slf4j
@@ -90,6 +94,22 @@ public class UserService {
         String name = context.getAuthentication().getName();
         User user = userRepository.findById(name)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_EXISTED));
+        return userMapper.toUserResponse(user);
+    }
+
+    public List<UserResponse> getListUser() {
+        List<User> users = userRepository.findAll();
+        return users.stream().map(userMapper::toUserResponse).toList();
+    }
+
+    public UserResponse updateLockStatusUser(String id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_EXISTED));
+
+        user.setLocked(!user.isLocked());
+        log.info("User Infor : {}", user.isLocked());
+        userRepository.save(user);
+
         return userMapper.toUserResponse(user);
     }
 }

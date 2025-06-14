@@ -38,7 +38,12 @@ public class MessageService {
     }
 
     public List<Message> getChatMessage(String senderId, String receiverId) {
-        var chatId = chatRoomService.getChatRoomId(senderId, receiverId, false);
-        return chatId.map(messageRepository::findByChatId).orElse(new ArrayList<>());
+        var chatId = chatRoomService.getChatRoomId(senderId, receiverId, true);
+        if (chatId.isPresent()) {
+            System.out.println("Tìm theo chatId: " + chatId.get());
+            List<Message> messageList = messageRepository.findByChatId(chatId.get());
+            return messageList;
+        }
+        return new ArrayList<>();
     }
 }

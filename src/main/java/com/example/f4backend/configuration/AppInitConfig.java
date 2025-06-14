@@ -37,7 +37,7 @@ public class AppInitConfig {
                     });
 
                 User admin = User.builder()
-                        .username("admin")
+                        .phone("0912345678")
                         .password(passwordEncoder.encode("admin"))
                         .roles(Set.of(adminRole))
                         .build();
