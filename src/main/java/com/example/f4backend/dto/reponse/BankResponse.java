@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 
 @Data
 public class BankResponse {
+    private String bankId;
     private String driverId;
     private String bankName;
     private String bankAccountNumber;

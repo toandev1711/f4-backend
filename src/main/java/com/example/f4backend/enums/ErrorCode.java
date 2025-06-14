@@ -42,12 +42,13 @@ public enum ErrorCode {
     TRANSACTION_NOT_FOUND(1001, "Transaction not found", HttpStatus.FOUND),
     TRANSACTION_SUCCESS(200, "Transaction successful", HttpStatus.OK),
     CREATE_BANK_SUCCESS(200, "Bank created successfully", HttpStatus.OK),
-    BANK_LIMIT_EXCEEDED(1001, "Bank limit exceeded", HttpStatus.FOUND),
-    BANK_ALREADY_EXISTS(1001, "Bank with same info already exists for this driver", HttpStatus.FOUND),
+    BANK_LIMIT_EXCEEDED(1001, "Bank limit exceeded", HttpStatus.OK),
+    BANK_ALREADY_EXISTS(1001, "Bank with same info already exists for this driver", HttpStatus.OK),
     BANK_NOT_FOUND(1001, "Bank not found", HttpStatus.FOUND),
     BANK_UPDATE_SUCCESS(200, "Bank updated successfully", HttpStatus.OK),
     BANK_DELETE_SUCCESS(200, "Bank deleted successfully", HttpStatus.OK),
     BANK_GET_SUCCESS(200, "Bank get successfully", HttpStatus.OK),
+    WALLET_GET_SUCCESS(200, "Wallet get successfully", HttpStatus.OK),
     GET_USER_SUCCESS(200 , "Get user successfully", HttpStatus.OK),
     ;
 

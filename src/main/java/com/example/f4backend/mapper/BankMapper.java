@@ -15,6 +15,7 @@ public interface BankMapper {
     Bank toBank(BankRequest bankRequest , Driver driver);
 
     @Mapping(target = "driverId", source = "driver.driverId")
+    @Mapping(target = "bankId", source = "bankId")
     BankResponse toBankResponse(Bank bank);
 
     //update

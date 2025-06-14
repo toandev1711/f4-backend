@@ -51,10 +51,6 @@ public class TransactionService {
 
         Transaction transaction = transactionMapper.toTransaction(request, wallet, transactionType, transactionStatus);
 
-        wallet.setBalance(wallet.getBalance().add(request.getAmount()));
-        wallet.setLastUpdated(LocalDateTime.now());
-        walletRepository.save(wallet);
-
         transaction = transactionRepository.save(transaction);
 
         return transactionMapper.toDepositResponse(transaction);
@@ -81,10 +77,6 @@ public class TransactionService {
 
         Transaction transaction = transactionMapper.toTransaction(request, wallet, transactionType, transactionStatus);
 
-        wallet.setBalance(wallet.getBalance().subtract(request.getAmount()));
-        wallet.setLastUpdated(LocalDateTime.now());
-        walletRepository.save(wallet);
-
         transaction = transactionRepository.save(transaction);
 
         return transactionMapper.toWithDrawResponse(transaction);
@@ -107,7 +99,7 @@ public class TransactionService {
         wallet.setLastUpdated(LocalDateTime.now());
         walletRepository.save(wallet);
 
-        transaction.setStatus(transactionStatusRepository.findByTransactionStatusId(3).
+        transaction.setTransactionStatus(transactionStatusRepository.findByTransactionStatusId(3).
                 orElseThrow(() -> new CustomException(ErrorCode.TRANSACTION_STATUS_NOT_FOUND)));
         transactionRepository.save(transaction);
 
@@ -127,11 +119,15 @@ public class TransactionService {
         Wallet wallet = walletRepository.findById(transaction.getWallet().getWalletId())
                 .orElseThrow(() -> new CustomException(ErrorCode.WALLET_NOT_FOUND));
 
+        if (wallet.getBalance().compareTo(transaction.getAmount()) < 0) {
+            throw new CustomException(ErrorCode.INSUFFICIENT_BALANCE);
+        }
+
         wallet.setBalance(wallet.getBalance().subtract(transaction.getAmount()));
         wallet.setLastUpdated(LocalDateTime.now());
         walletRepository.save(wallet);
 
-        transaction.setStatus(transactionStatusRepository.findByTransactionStatusId(3).
+        transaction.setTransactionStatus(transactionStatusRepository.findByTransactionStatusId(3).
                 orElseThrow(() -> new CustomException(ErrorCode.TRANSACTION_STATUS_NOT_FOUND)));
         transactionRepository.save(transaction);
         return transactionMapper.toWithDrawResponse(transaction);
