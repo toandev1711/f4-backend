@@ -208,33 +208,37 @@ public class DriverService {
                 return driverMapper.toVehicleDetailResponse(updatedVehicleDetail);
         }
 
-//        @Transactional
-//        public void checkStatusDocument(String driverId) {
-//                Driver driver = driverRepository.findById(driverId)
-//                        .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_EXISTED));
-//                DocumentStatus status= documentStatusRepository.findById(3)
-//                        .orElseThrow(() -> new CustomException(ErrorCode.STATUS_NOT_FOUND));
-//                //kiem tra status cccd
-//                boolean isIdentifierApproved = identifierCardRepository.findByDriverDriverId(driverId)
-//                        .map(card -> card.getStatus().getStatusID()== 3)
-//                        .orElse(false);
-//
-//                // kiem tra license
-//                List<LicenseCar> licenses = licenseCarRepository.findByDriverDriverId(driverId);
-//                boolean areAllLicensesApproved = !licenses.isEmpty() &&
-//                        licenses.stream().allMatch(l -> l.getStatus().getStatusID() == 3);
-//
-//                // kiem tra vehicle
-//                List<VehicleDetail> vehicles = vehicleDetailRepository.findByDriverDriverId(driverId);
-//                boolean areAllVehiclesApproved = !vehicles.isEmpty() &&
-//                        vehicles.stream().allMatch(v -> v.getStatus().getStatusID() == 3);
-//
-//                // ca 3 duoc duyet thi cap nhat
-//                if (isIdentifierApproved && areAllLicensesApproved && areAllVehiclesApproved) {
-//                        driver.setDriverStatus(status);
-//                        driverRepository.save(driver);
-//                }
-//        }
+        public void checkStatusDocument(String driverId) {
+                Driver driver = driverRepository.findById(driverId)
+                        .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_EXISTED));
+                DriverStatus status= driverStatusRepository.findById(3)
+                        .orElseThrow(() -> new CustomException(ErrorCode.STATUS_NOT_FOUND));
+                //kiem tra status cccd
+                boolean isIdentifierApproved = identifierCardRepository.findByDriverDriverId(driverId)
+                        .map(card -> card.getStatus().getStatusID()== 3)
+                        .orElse(false);
+
+                // kiem tra license
+                List<LicenseCar> licenses = licenseCarRepository.findByDriverDriverId(driverId);
+                boolean areAllLicensesApproved = !licenses.isEmpty() &&
+                        licenses.stream().allMatch(l -> l.getStatus().getStatusID() == 3);
+
+                // kiem tra vehicle
+                List<VehicleDetail> vehicles = vehicleDetailRepository.findByDriverDriverId(driverId);
+                boolean areAllVehiclesApproved = !vehicles.isEmpty() &&
+                        vehicles.stream().allMatch(v -> v.getStatus().getStatusID() == 3);
+
+                // ca 3 duoc duyet thi cap nhat
+                if (isIdentifierApproved && areAllLicensesApproved && areAllVehiclesApproved) {
+                        driver.setDriverStatus(status);
+                        driverRepository.save(driver);
+                }else{
+                        DriverStatus statuss= driverStatusRepository.findById(1)
+                                .orElseThrow(() -> new CustomException(ErrorCode.STATUS_NOT_FOUND));
+                        driver.setDriverStatus(statuss);
+                        driverRepository.save(driver);
+                }
+        }
 
         public IdentifierCardResponse updateIdentifierCardStatus(String driverId, String statusId) {
 
@@ -246,7 +250,7 @@ public class DriverService {
 
                 card.setStatus(documentStatus);
                 IdentifierCard updatedCard = identifierCardRepository.save(card);
-
+                checkStatusDocument(driverId);
                 return driverMapper.toIdentifierCardResponse(updatedCard);
         }
         public LicenseCarResponse updateLicenseCardStatus(String licenseId, String driverId, String statusId) {
@@ -260,6 +264,7 @@ public class DriverService {
 
                 license.setStatus(documentStatus);
                 LicenseCar updatedLicenseCar = licenseCarRepository.save(license);
+                checkStatusDocument(driverId);
                 return driverMapper.toLicenseCarResponse(updatedLicenseCar);
         }
         public VehicleDetailResponse updateVehilceCardStatus(String vehicleId, String driverId, String statusId) {
@@ -273,6 +278,7 @@ public class DriverService {
 
                 vehicle.setStatus(documentStatus);
                 VehicleDetail updateVehicle = vehicleDetailRepository.save(vehicle);
+                checkStatusDocument(driverId);
                 return driverMapper.toVehicleDetailResponse(updateVehicle);
         }
 
