@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping("/admin")
@@ -73,6 +75,4 @@ public class AdminController {
                 .message(ErrorCode.UPDATE_DRIVER_SUCCESS.getMessage())
                 .build();
     }
-
-
 }
