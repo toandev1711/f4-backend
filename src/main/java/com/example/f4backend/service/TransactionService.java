@@ -51,10 +51,6 @@ public class TransactionService {
 
         Transaction transaction = transactionMapper.toTransaction(request, wallet, transactionType, transactionStatus);
 
-//        wallet.setBalance(wallet.getBalance().add(request.getAmount()));
-//        wallet.setLastUpdated(LocalDateTime.now());
-//        walletRepository.save(wallet);
-
         transaction = transactionRepository.save(transaction);
 
         return transactionMapper.toDepositResponse(transaction);
@@ -80,10 +76,6 @@ public class TransactionService {
                 .orElseThrow(() -> new CustomException(ErrorCode.TRANSACTION_STATUS_NOT_FOUND));
 
         Transaction transaction = transactionMapper.toTransaction(request, wallet, transactionType, transactionStatus);
-
-//        wallet.setBalance(wallet.getBalance().subtract(request.getAmount()));
-//        wallet.setLastUpdated(LocalDateTime.now());
-//        walletRepository.save(wallet);
 
         transaction = transactionRepository.save(transaction);
 
