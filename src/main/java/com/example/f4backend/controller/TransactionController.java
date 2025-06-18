@@ -1,9 +1,6 @@
 package com.example.f4backend.controller;
 
-import com.example.f4backend.dto.reponse.ApiResponse;
-import com.example.f4backend.dto.reponse.DepositResponse;
-import com.example.f4backend.dto.reponse.DriverResponse;
-import com.example.f4backend.dto.reponse.WithDrawResponse;
+import com.example.f4backend.dto.reponse.*;
 import com.example.f4backend.dto.request.TransactionRequest;
 import com.example.f4backend.enums.ErrorCode;
 import com.example.f4backend.service.TransactionService;
@@ -13,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -53,11 +51,22 @@ public class TransactionController {
                 .build();
     }
 
+//    @PutMapping("/update-deposit/{transactionId}")
+//    public ApiResponse<DepositResponse> updateDeposit(@PathVariable String transactionId) {
+//        return ApiResponse.<DepositResponse>builder()
+//                .code(ErrorCode.TRANSACTION_SUCCESS.getCode())
+//                .result(transactionService.updateDeposit(transactionId))
+//                .message(ErrorCode.TRANSACTION_SUCCESS.getMessage())
+//                .build();
+//    }
+
     @PutMapping("/update-deposit/{transactionId}")
-    public ApiResponse<DepositResponse> updateDeposit(@PathVariable String transactionId) {
+    public ApiResponse<DepositResponse> updateDeposit(
+            @PathVariable String transactionId,
+            @RequestParam Integer statusId) {
         return ApiResponse.<DepositResponse>builder()
                 .code(ErrorCode.TRANSACTION_SUCCESS.getCode())
-                .result(transactionService.updateDeposit(transactionId))
+                .result(transactionService.updateDeposit(transactionId, statusId))
                 .message(ErrorCode.TRANSACTION_SUCCESS.getMessage())
                 .build();
     }
@@ -72,11 +81,31 @@ public class TransactionController {
     }
 
     @PutMapping("/update-withdraw/{transactionId}")
-    public ApiResponse<WithDrawResponse> updateWithdraw(@PathVariable String transactionId) {
+    public ApiResponse<WithDrawResponse> updateWithdraw(
+            @PathVariable String transactionId,
+            @RequestParam Integer statusId) {
         return ApiResponse.<WithDrawResponse>builder()
                 .code(ErrorCode.TRANSACTION_SUCCESS.getCode())
-                .result(transactionService.updateWithDraw(transactionId))
+                .result(transactionService.updateWithDraw(transactionId , statusId))
                 .message(ErrorCode.TRANSACTION_SUCCESS.getMessage())
                 .build();
+    }
+
+    @GetMapping("/getTransactionManager")
+    public ApiResponse<List<TransactionManagerResponse>> getTransactionManager() {
+        return ApiResponse.<List<TransactionManagerResponse>>builder()
+                .code(ErrorCode.TRANSACTION_SUCCESS.getCode())
+                .result(transactionService.getTransactionManager())
+                .message(ErrorCode.TRANSACTION_SUCCESS.getMessage())
+                .build();
+    }
+
+    @GetMapping("")
+    public Page<TransactionManagerResponse> getTransactions(
+            @RequestParam(defaultValue = "") String searchTerm,
+            @RequestParam(defaultValue = "All") String status,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return transactionService.getTransactions(searchTerm, status, page, size);
     }
 }
