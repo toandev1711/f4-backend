@@ -1,6 +1,7 @@
 package com.example.f4backend.service;
 
 import com.example.f4backend.dto.reponse.DepositResponse;
+import com.example.f4backend.dto.reponse.TransactionManagerResponse;
 import com.example.f4backend.dto.reponse.WithDrawResponse;
 import com.example.f4backend.dto.request.TransactionRequest;
 import com.example.f4backend.entity.Transaction;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -151,5 +153,21 @@ public class TransactionService {
         List<Transaction> transactions = transactionRepository.findTop10ByWalletAndTransactionTypeOrderByTransactionTimeDesc(wallet, transactionType);
 
         return transactions.stream().map(transactionMapper::toWithDrawResponse).toList();
+    }
+
+    public List<TransactionManagerResponse> getTransactionManager() {
+        List<Transaction> transactions = transactionRepository.findAll();
+
+        return transactions.stream()
+                .map(transaction -> {
+                    Wallet wallet = transaction.getWallet();
+                    return transactionMapper.toTransactionManagerResponse(
+                            transaction,
+                            wallet != null ? wallet.getDriver() : null,
+                            transaction.getTransactionType(),
+                            transaction.getTransactionStatus()
+                    );
+                })
+                .collect(Collectors.toList());
     }
 }

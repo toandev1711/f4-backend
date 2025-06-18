@@ -1,9 +1,6 @@
 package com.example.f4backend.controller;
 
-import com.example.f4backend.dto.reponse.ApiResponse;
-import com.example.f4backend.dto.reponse.DepositResponse;
-import com.example.f4backend.dto.reponse.DriverResponse;
-import com.example.f4backend.dto.reponse.WithDrawResponse;
+import com.example.f4backend.dto.reponse.*;
 import com.example.f4backend.dto.request.TransactionRequest;
 import com.example.f4backend.enums.ErrorCode;
 import com.example.f4backend.service.TransactionService;
@@ -76,6 +73,15 @@ public class TransactionController {
         return ApiResponse.<WithDrawResponse>builder()
                 .code(ErrorCode.TRANSACTION_SUCCESS.getCode())
                 .result(transactionService.updateWithDraw(transactionId))
+                .message(ErrorCode.TRANSACTION_SUCCESS.getMessage())
+                .build();
+    }
+
+    @GetMapping("/getTransactionManager")
+    public ApiResponse<List<TransactionManagerResponse>> getTransactionManager() {
+        return ApiResponse.<List<TransactionManagerResponse>>builder()
+                .code(ErrorCode.TRANSACTION_SUCCESS.getCode())
+                .result(transactionService.getTransactionManager())
                 .message(ErrorCode.TRANSACTION_SUCCESS.getMessage())
                 .build();
     }
