@@ -18,6 +18,8 @@ import com.example.f4backend.repository.WalletRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 
@@ -169,5 +171,36 @@ public class TransactionService {
                     );
                 })
                 .collect(Collectors.toList());
+    }
+
+    public Page<TransactionManagerResponse> getTransactions(String searchTerm, String status, int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page - 1, size);
+
+        int statusId;
+        if (status == null || status.equalsIgnoreCase("All")) {
+            statusId = -1;
+        } else {
+            try {
+                statusId = Integer.parseInt(status);
+            } catch (NumberFormatException e) {
+                statusId = -1;
+            }
+        }
+
+        Page<Transaction> transactionPage = transactionRepository.findBySearchTermAndStatus(
+                searchTerm != null ? searchTerm : "",
+                statusId,
+                pageRequest
+        );
+
+        return transactionPage.map(transaction -> {
+            Wallet wallet = transaction.getWallet();
+            return transactionMapper.toTransactionManagerResponse(
+                    transaction,
+                    wallet != null ? wallet.getDriver() : null,
+                    transaction.getTransactionType(),
+                    transaction.getTransactionStatus()
+            );
+        });
     }
 }

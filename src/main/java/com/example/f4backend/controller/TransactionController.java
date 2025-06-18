@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -84,5 +85,14 @@ public class TransactionController {
                 .result(transactionService.getTransactionManager())
                 .message(ErrorCode.TRANSACTION_SUCCESS.getMessage())
                 .build();
+    }
+
+    @GetMapping("")
+    public Page<TransactionManagerResponse> getTransactions(
+            @RequestParam(defaultValue = "") String searchTerm,
+            @RequestParam(defaultValue = "All") String status,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "3") int size) {
+        return transactionService.getTransactions(searchTerm, status, page, size);
     }
 }
