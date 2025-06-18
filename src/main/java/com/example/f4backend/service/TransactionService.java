@@ -86,54 +86,120 @@ public class TransactionService {
         return transactionMapper.toWithDrawResponse(transaction);
     }
 
+//    @Transactional
+//    public DepositResponse updateDeposit(String transactionId){
+//        Transaction transaction = transactionRepository.findById(transactionId)
+//                .orElseThrow(() -> new CustomException(ErrorCode.TRANSACTION_NOT_FOUND));
+//
+//        //kiem tra xem co phai la deposit khong
+//        if(transaction.getTransactionType().getTransactionTypeId() != 1){
+//            throw new CustomException(ErrorCode.TRANSACTION_TYPE_NOT_FOUND);
+//        }
+//
+//        Wallet wallet = walletRepository.findById(transaction.getWallet().getWalletId())
+//                .orElseThrow(() -> new CustomException(ErrorCode.WALLET_NOT_FOUND));
+//
+//        wallet.setBalance(wallet.getBalance().add(transaction.getAmount()));
+//        wallet.setLastUpdated(LocalDateTime.now());
+//        walletRepository.save(wallet);
+//
+//        transaction.setTransactionStatus(transactionStatusRepository.findByTransactionStatusId(3).
+//                orElseThrow(() -> new CustomException(ErrorCode.TRANSACTION_STATUS_NOT_FOUND)));
+//        transactionRepository.save(transaction);
+//
+//        return transactionMapper.toDepositResponse(transaction);
+//    }
+
     @Transactional
-    public DepositResponse updateDeposit(String transactionId){
+    public DepositResponse updateDeposit(String transactionId, Integer statusId) {
         Transaction transaction = transactionRepository.findById(transactionId)
                 .orElseThrow(() -> new CustomException(ErrorCode.TRANSACTION_NOT_FOUND));
 
-        //kiem tra xem co phai la deposit khong
-        if(transaction.getTransactionType().getTransactionTypeId() != 1){
+        // Kiểm tra xem có phải là DEPOSIT không
+        if (transaction.getTransactionType().getTransactionTypeId() != 1) {
             throw new CustomException(ErrorCode.TRANSACTION_TYPE_NOT_FOUND);
         }
 
-        Wallet wallet = walletRepository.findById(transaction.getWallet().getWalletId())
-                .orElseThrow(() -> new CustomException(ErrorCode.WALLET_NOT_FOUND));
+        // Kiểm tra trạng thái hợp lệ
+        TransactionStatus status = transactionStatusRepository.findByTransactionStatusId(statusId)
+                .orElseThrow(() -> new CustomException(ErrorCode.TRANSACTION_STATUS_NOT_FOUND));
 
-        wallet.setBalance(wallet.getBalance().add(transaction.getAmount()));
-        wallet.setLastUpdated(LocalDateTime.now());
-        walletRepository.save(wallet);
+        // Nếu trạng thái là APPROVED, cập nhật số dư ví
+        if (statusId == 3) { // Giả định 3 là APPROVED
+            Wallet wallet = walletRepository.findById(transaction.getWallet().getWalletId())
+                    .orElseThrow(() -> new CustomException(ErrorCode.WALLET_NOT_FOUND));
 
-        transaction.setTransactionStatus(transactionStatusRepository.findByTransactionStatusId(3).
-                orElseThrow(() -> new CustomException(ErrorCode.TRANSACTION_STATUS_NOT_FOUND)));
+            wallet.setBalance(wallet.getBalance().add(transaction.getAmount()));
+            wallet.setLastUpdated(LocalDateTime.now());
+            walletRepository.save(wallet);
+        }
+
+        // Cập nhật trạng thái giao dịch
+        transaction.setTransactionStatus(status);
         transactionRepository.save(transaction);
 
         return transactionMapper.toDepositResponse(transaction);
     }
 
+//    @Transactional
+//    public WithDrawResponse updateWithDraw(String transactionId){
+//        Transaction transaction = transactionRepository.findById(transactionId)
+//                .orElseThrow(() -> new CustomException(ErrorCode.TRANSACTION_NOT_FOUND));
+//
+//        //kiem tra xem co phai la withdraw khong
+//        if(transaction.getTransactionType().getTransactionTypeId() != 2){
+//            throw new CustomException(ErrorCode.TRANSACTION_TYPE_NOT_FOUND);
+//        }
+//
+//        Wallet wallet = walletRepository.findById(transaction.getWallet().getWalletId())
+//                .orElseThrow(() -> new CustomException(ErrorCode.WALLET_NOT_FOUND));
+//
+//        if (wallet.getBalance().compareTo(transaction.getAmount()) < 0) {
+//            throw new CustomException(ErrorCode.INSUFFICIENT_BALANCE);
+//        }
+//
+//        wallet.setBalance(wallet.getBalance().subtract(transaction.getAmount()));
+//        wallet.setLastUpdated(LocalDateTime.now());
+//        walletRepository.save(wallet);
+//
+//        transaction.setTransactionStatus(transactionStatusRepository.findByTransactionStatusId(3).
+//                orElseThrow(() -> new CustomException(ErrorCode.TRANSACTION_STATUS_NOT_FOUND)));
+//        transactionRepository.save(transaction);
+//        return transactionMapper.toWithDrawResponse(transaction);
+//    }
+
     @Transactional
-    public WithDrawResponse updateWithDraw(String transactionId){
+    public WithDrawResponse updateWithDraw(String transactionId, Integer statusId) {
         Transaction transaction = transactionRepository.findById(transactionId)
                 .orElseThrow(() -> new CustomException(ErrorCode.TRANSACTION_NOT_FOUND));
 
-        //kiem tra xem co phai la withdraw khong
-        if(transaction.getTransactionType().getTransactionTypeId() != 2){
+        // Kiểm tra xem có phải là WITHDRAW không
+        if (transaction.getTransactionType().getTransactionTypeId() != 2) {
             throw new CustomException(ErrorCode.TRANSACTION_TYPE_NOT_FOUND);
         }
 
-        Wallet wallet = walletRepository.findById(transaction.getWallet().getWalletId())
-                .orElseThrow(() -> new CustomException(ErrorCode.WALLET_NOT_FOUND));
+        // Kiểm tra trạng thái hợp lệ
+        TransactionStatus status = transactionStatusRepository.findByTransactionStatusId(statusId)
+                .orElseThrow(() -> new CustomException(ErrorCode.TRANSACTION_STATUS_NOT_FOUND));
 
-        if (wallet.getBalance().compareTo(transaction.getAmount()) < 0) {
-            throw new CustomException(ErrorCode.INSUFFICIENT_BALANCE);
+        // Nếu trạng thái là APPROVED, cập nhật số dư[vi
+        if (statusId == 3) { // Giả định 3 là APPROVED
+            Wallet wallet = walletRepository.findById(transaction.getWallet().getWalletId())
+                    .orElseThrow(() -> new CustomException(ErrorCode.WALLET_NOT_FOUND));
+
+            if (wallet.getBalance().compareTo(transaction.getAmount()) < 0) {
+                throw new CustomException(ErrorCode.INSUFFICIENT_BALANCE);
+            }
+
+            wallet.setBalance(wallet.getBalance().subtract(transaction.getAmount()));
+            wallet.setLastUpdated(LocalDateTime.now());
+            walletRepository.save(wallet);
         }
 
-        wallet.setBalance(wallet.getBalance().subtract(transaction.getAmount()));
-        wallet.setLastUpdated(LocalDateTime.now());
-        walletRepository.save(wallet);
-
-        transaction.setTransactionStatus(transactionStatusRepository.findByTransactionStatusId(3).
-                orElseThrow(() -> new CustomException(ErrorCode.TRANSACTION_STATUS_NOT_FOUND)));
+        // Cập nhật trạng thái giao dịch
+        transaction.setTransactionStatus(status);
         transactionRepository.save(transaction);
+
         return transactionMapper.toWithDrawResponse(transaction);
     }
 

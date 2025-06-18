@@ -51,11 +51,22 @@ public class TransactionController {
                 .build();
     }
 
+//    @PutMapping("/update-deposit/{transactionId}")
+//    public ApiResponse<DepositResponse> updateDeposit(@PathVariable String transactionId) {
+//        return ApiResponse.<DepositResponse>builder()
+//                .code(ErrorCode.TRANSACTION_SUCCESS.getCode())
+//                .result(transactionService.updateDeposit(transactionId))
+//                .message(ErrorCode.TRANSACTION_SUCCESS.getMessage())
+//                .build();
+//    }
+
     @PutMapping("/update-deposit/{transactionId}")
-    public ApiResponse<DepositResponse> updateDeposit(@PathVariable String transactionId) {
+    public ApiResponse<DepositResponse> updateDeposit(
+            @PathVariable String transactionId,
+            @RequestParam Integer statusId) {
         return ApiResponse.<DepositResponse>builder()
                 .code(ErrorCode.TRANSACTION_SUCCESS.getCode())
-                .result(transactionService.updateDeposit(transactionId))
+                .result(transactionService.updateDeposit(transactionId, statusId))
                 .message(ErrorCode.TRANSACTION_SUCCESS.getMessage())
                 .build();
     }
@@ -70,10 +81,12 @@ public class TransactionController {
     }
 
     @PutMapping("/update-withdraw/{transactionId}")
-    public ApiResponse<WithDrawResponse> updateWithdraw(@PathVariable String transactionId) {
+    public ApiResponse<WithDrawResponse> updateWithdraw(
+            @PathVariable String transactionId,
+            @RequestParam Integer statusId) {
         return ApiResponse.<WithDrawResponse>builder()
                 .code(ErrorCode.TRANSACTION_SUCCESS.getCode())
-                .result(transactionService.updateWithDraw(transactionId))
+                .result(transactionService.updateWithDraw(transactionId , statusId))
                 .message(ErrorCode.TRANSACTION_SUCCESS.getMessage())
                 .build();
     }
@@ -92,7 +105,7 @@ public class TransactionController {
             @RequestParam(defaultValue = "") String searchTerm,
             @RequestParam(defaultValue = "All") String status,
             @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "3") int size) {
+            @RequestParam(defaultValue = "10") int size) {
         return transactionService.getTransactions(searchTerm, status, page, size);
     }
 }
