@@ -16,7 +16,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface DriverRepository extends JpaRepository<Driver, String>, JpaSpecificationExecutor<Driver> {
     boolean existsByDriverId(@NotNull String driverId);
-
     // Optional<User> findByPhone(String phoneNumber);
     Optional<Driver> findByPhone(String phoneNumber);
 
@@ -31,5 +30,8 @@ public interface DriverRepository extends JpaRepository<Driver, String>, JpaSpec
     Page<Driver> findBySearchTermAndStatus(@Param("searchTerm") String searchTerm,
                                            @Param("status") int status,
                                            Pageable pageable);
+    @Query(value = "SELECT * FROM drivers WHERE driver_id IN (:ids)", nativeQuery = true)
+    List<Driver> findDriversByIds(@Param("ids") List<String> ids);
 
+    Driver findByDriverId(String id);
 }

@@ -4,13 +4,17 @@ import com.example.f4backend.dto.reponse.*;
 //import com.example.f4backend.dto.reponse.UserResponse;
 import com.example.f4backend.dto.request.*;
 //import com.example.f4backend.entity.*;
+import com.example.f4backend.entity.DriverRevenue;
 import com.example.f4backend.enums.ErrorCode;
 //import com.example.f4backend.service.DriverService;
+import com.example.f4backend.repository.DriverRepository;
 import com.example.f4backend.repository.IdentifierCardRepository;
 import com.example.f4backend.repository.VehicleTypeRepository;
 import com.example.f4backend.service.CloudinaryService;
+import com.example.f4backend.service.DriverRevenueService;
 import com.example.f4backend.service.DriverService;
 //import com.example.f4backend.service.UserService;
+import com.twilio.rest.api.v2010.account.usage.record.Today;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +43,8 @@ import java.util.Map;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class DriverController {
         private final DriverService driverService;
-
+        private final DriverRevenueService driverRevenueService;
+        private final DriverRepository driverRepository;
         @PostMapping
         public ApiResponse<DriverResponse> createDriver(@Valid @RequestBody DriverRequest request) {
                 return ApiResponse.<DriverResponse>builder()
@@ -193,5 +199,17 @@ public class DriverController {
                                 .build();
         }
 
+        @GetMapping("/revenue/today/{driverId}")
+        public ResponseEntity<List<TodayRevenue>> getTodayRevenue(@PathVariable String driverId) {
+                List<TodayRevenue> revenues = driverRevenueService.getTodayRevenueByDriver(driverId);
+                return ResponseEntity.ok(revenues);
+        }
 
+        @GetMapping("/revenue/total/{driverId}")
+        public ApiResponse<BigDecimal> getTotalRevenue(@PathVariable String driverId) {
+                return ApiResponse.<BigDecimal>builder()
+                        .code(1000)
+                        .message("Total Message")
+                        .result(driverRevenueService.getTotalRevenueByDriverId(driverId)).build();
+        }
 }

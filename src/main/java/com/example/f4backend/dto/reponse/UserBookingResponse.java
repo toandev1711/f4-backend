@@ -13,4 +13,5 @@ import lombok.NoArgsConstructor;
 public class UserBookingResponse {
     private String message;
     private Booking booking;
+    private String bookingId;
 }

@@ -17,9 +17,7 @@ public class Room {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
-
     private String chatId;
-
     private String userAId;
     private String userBId;
 }

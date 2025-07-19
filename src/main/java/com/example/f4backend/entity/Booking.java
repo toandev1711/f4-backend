@@ -37,4 +37,6 @@ public class Booking {
     @JoinColumn(name = "booking_status_id")
     private BookingStatus bookingStatus;
 
+    private double rating;
+    private String ratingNote;
 }

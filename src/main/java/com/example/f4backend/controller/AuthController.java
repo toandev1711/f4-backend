@@ -48,7 +48,4 @@ public class AuthController {
         apiResponse.setCode(ErrorCode.LOGIN_SUSSCESS.getCode());
         return apiResponse;
     }
-
-
-
 }

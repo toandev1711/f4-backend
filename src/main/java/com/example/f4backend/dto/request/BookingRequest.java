@@ -25,4 +25,5 @@ public class BookingRequest {
     private BigDecimal dropoffLongitude;
     private String fullName;
     private Double price;
+    private Double distance;
 }
